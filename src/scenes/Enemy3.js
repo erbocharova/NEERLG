@@ -10,7 +10,7 @@ export default class Enemy3 {
         const anims = scene.anims;
 
         this.key = key;
-        this.brunt = 100;
+        this.brunt = 25;
         this.sightRange = 64;
         this.healthPoints = 100;
         this.isAttacking = false;
