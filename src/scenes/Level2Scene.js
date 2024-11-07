@@ -16,9 +16,9 @@ export default class Level2Scene extends Phaser.Scene
  
     preload()
     {
-        this.load.image('background1', 'assets/Tileset/Background/Day/1.png');
-        this.load.image('background5', 'assets/Tileset/Background/Night/5.png');
-        this.load.image('background6', 'assets/Tileset/Background/Night/6.png');
+        this.load.image('background1', background1);
+        this.load.image('background5', bgnNight5);
+        this.load.image('background6',  bgnNight5);
         this.load.image('tile1', 'assets/Tileset/1 Tiles/Tiles_58.png');
         this.load.spritesheet('playerIdle', 'assets/Characters/2 Punk/Punk_idle1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('playerRun', 'assets/Characters/2 Punk/Punk_run1.png', { frameWidth: 32, frameHeight: 32 });

@@ -3,8 +3,9 @@ import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "./Player";
 //import Enemy3 from "./Enemy3";
 import Enemy1 from "./Enemy1";
-import Level2Scene from './Level2Scene'
-
+import background1 from "../../public/assets/Tileset/Background/Day/1.png"
+import bgnNight5 from "../../public/assets/Tileset/Background/Night/5.png"
+import bgnNight6 from "../../public/assets/Tileset/Background/Night/6.png"
 export default class Level1Scene extends Phaser.Scene
 {
     constructor()
@@ -15,9 +16,9 @@ export default class Level1Scene extends Phaser.Scene
  
     preload()
     {
-        this.load.image('background0', 'assets/Tileset/Background/Day/1.png');
-	    this.load.image('background1', 'assets/Tileset/Background/Day/day.png');
-        this.load.image('background2', 'assets/Tileset/Background/Day/6.png');
+        this.load.image('background1', background1);
+        this.load.image('background5', bgnNight5);
+        this.load.image('background6',  bgnNight6);
         this.load.image('tile', 'assets/Tileset/1 Tiles/Tiles_01.png');
         this.load.spritesheet('playerIdle', 'assets/Characters/2 Punk/Punk_idle1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('playerRun', 'assets/Characters/2 Punk/Punk_run1.png', { frameWidth: 32, frameHeight: 32 });
@@ -41,7 +42,7 @@ export default class Level1Scene extends Phaser.Scene
     create()
     {
         this.add.image(512, 288, 'background0');
-	    this.add.image(512, 288, 'background1');
+        this.add.image(512, 288, 'background1');
         this.add.image(512, 288, 'background2');
 
         this.add.text(0, 0, 'Level 1', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
