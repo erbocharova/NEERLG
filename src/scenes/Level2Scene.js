@@ -20,23 +20,6 @@ export default class Level2Scene extends Phaser.Scene
         this.load.image('background5', 'assets/Tileset/Background/Night/5.png');
         this.load.image('background6', 'assets/Tileset/Background/Night/6.png');
         this.load.image('tile1', 'assets/Tileset/1 Tiles/Tiles_58.png');
-        this.load.spritesheet('playerIdle', 'assets/Characters/2 Punk/Punk_idle1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerRun', 'assets/Characters/2 Punk/Punk_run1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerJump', 'assets/Characters/2 Punk/Punk_jump1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerHandHit', 'assets/Characters/2 Punk/Punk_attack1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerLegHit', 'assets/Characters/2 Punk/Punk_punch.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerHurt', 'assets/Characters/2 Punk/Punk_hurt.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerDeath', 'assets/Characters/2 Punk/Punk_death.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyWalk3', 'assets/Enemies/3/Walk.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyAttack3', 'assets/Enemies/3/Attack.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyIdle3', 'assets/Enemies/3/Idle.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyHurt3', 'assets/Enemies/3/Hurt.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyDeath3', 'assets/Enemies/3/Death.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyAttack1', 'assets/Enemies/1/Attack1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyIdle1', 'assets/Enemies/1/Idle1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyWalk1', 'assets/Enemies/1/Walk1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyHurt1', 'assets/Enemies/1/Hurt1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyDeath1', 'assets/Enemies/1/Death1.png', { frameWidth: 32, frameHeight: 32 });
     }
 
     create()
@@ -44,6 +27,7 @@ export default class Level2Scene extends Phaser.Scene
         this.add.image(512, 288, 'background1');
         this.add.image(512, 288, 'background5');
         this.add.image(512, 288, 'background6');
+        this.add.image(880, 30, 'heart-icon');
 
         this.add.text(0, 0, 'Level 2', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
 
@@ -187,7 +171,8 @@ export default class Level2Scene extends Phaser.Scene
     }
 
     update(time, delta) {
-        if (this.player.sprite.getCenter().y > 560) 
+        this.player.DrawHealthBar();
+        if (this.player.sprite.getCenter().y > 550) 
         {
             this.player.sprite.setCollideWorldBounds(false);
             this.scene.switch('DeathScene');
@@ -209,6 +194,9 @@ export default class Level2Scene extends Phaser.Scene
             this.enemiesList.forEach((enemy) => {
                 enemy.update(time, delta, this.player);
             })
+        }
+        else {
+            this.scene.switch('DeathScene');
         }
 
         

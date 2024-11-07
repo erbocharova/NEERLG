@@ -8,7 +8,7 @@ export default class Enemy1{
         const anims = scene.anims;
 
         this.key = key;
-        this.brunt = 50;
+        this.brunt = 10;
         this.sightRange = 64;
         this.healthPoints = 50;
         this.isAttacking = false;

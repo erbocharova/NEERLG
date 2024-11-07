@@ -19,13 +19,13 @@ export default class Level1Scene extends Phaser.Scene
 	    this.load.image('background1', 'assets/Tileset/Background/Day/day.png');
         this.load.image('background2', 'assets/Tileset/Background/Day/6.png');
         this.load.image('tile', 'assets/Tileset/1 Tiles/Tiles_01.png');
-        this.load.spritesheet('playerIdle', 'assets/Characters/2 Punk/Punk_idle1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerRun', 'assets/Characters/2 Punk/Punk_run1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerJump', 'assets/Characters/2 Punk/Punk_jump1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerHandHit', 'assets/Characters/2 Punk/Punk_attack1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerLegHit', 'assets/Characters/2 Punk/Punk_punch.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerHurt', 'assets/Characters/2 Punk/Punk_hurt.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('playerDeath', 'assets/Characters/2 Punk/Punk_death.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('playerIdle', 'assets/Characters/3 Cyborg/Cyborg_idle.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerRun', 'assets/Characters/3 Cyborg/Cyborg_run.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerJump', 'assets/Characters/3 Cyborg/Cyborg_jump.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerHandHit', 'assets/Characters/3 Cyborg/Cyborg_attack1.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerLegHit', 'assets/Characters/3 Cyborg/Cyborg_punch.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerHurt', 'assets/Characters/3 Cyborg/Cyborg_hurt.png', { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerDeath', 'assets/Characters/3 Cyborg/Cyborg_death.png', { frameWidth: 48, frameHeight: 48 });
         this.load.spritesheet('enemyWalk3', 'assets/Enemies/3/Walk.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyAttack3', 'assets/Enemies/3/Attack.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyIdle3', 'assets/Enemies/3/Idle.png', { frameWidth: 32, frameHeight: 32 });
@@ -36,6 +36,7 @@ export default class Level1Scene extends Phaser.Scene
         this.load.spritesheet('enemyWalk1', 'assets/Enemies/1/Walk1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyHurt1', 'assets/Enemies/1/Hurt1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyDeath1', 'assets/Enemies/1/Death1.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.image('heart-icon', '/assets/Implant/1 Icons/Icon9_18.png');
     }
 
     create()
@@ -43,9 +44,10 @@ export default class Level1Scene extends Phaser.Scene
         this.add.image(512, 288, 'background0');
 	    this.add.image(512, 288, 'background1');
         this.add.image(512, 288, 'background2');
+        this.add.image(880, 30, 'heart-icon');
 
         this.add.text(0, 0, 'Level 1', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 16, 'Press ←, →, ↑, ↓ to move', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 16, 'Press ←, →, ↑ to move', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.add.text(0, 32, 'Press E to hit with hand', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.add.text(0, 48, 'Press R to kick', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.add.text(0, 64, 'Kill all enemies and press Enter', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
@@ -105,6 +107,7 @@ export default class Level1Scene extends Phaser.Scene
     }
 
     update(time, delta) {
+        this.player.DrawHealthBar();
         if (this.playerAlive)
         {
             if (this.player.healthPoints > 0)
@@ -121,6 +124,9 @@ export default class Level1Scene extends Phaser.Scene
             this.enemiesList.forEach((enemy) => {
                 enemy.update(time, delta, this.player);
             })
+        }
+        else {
+            this.scene.switch('DeathScene');
         }
         /*else if (this.enemiesList.length != 0)
             {
