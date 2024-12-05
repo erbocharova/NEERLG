@@ -1,7 +1,6 @@
 import Phaser, { GameObjects } from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "./Player";
-//import Enemy3 from "./Enemy3";
 import Enemy1 from "./Enemy1";
 import Enemy3 from "./Enemy3";
 import Platform from "./Platforms"
@@ -126,13 +125,8 @@ export default class Level2Scene extends Phaser.Scene
 
      
         
-        this.player = new Player(this, 16, 368);
+        this.player = new Player(this, 16, 350);
         this.physics.add.collider(this.player.sprite, platformGroup);
-
-
-        //this.enemy3 = new Enemy3(this, 502, 530);                     убрала героя из другого класса
-        //this.physics.add.collider(this.enemy3.sprite, platformGroup);
-        //this.physics.add.overlap(this.player.sprite, this.enemy3.sprite);
 
         //создание 3 врагов из класса Enemy1
         this.enemy1 = new Enemy1(this, 100, 530, "enemy1");
@@ -148,15 +142,15 @@ export default class Level2Scene extends Phaser.Scene
         this.physics.add.overlap(this.player.sprite, this.enemy3.sprite);
 
         //создание 2 врагов из класса Enemy3
-        this.enemy4 = new Enemy3(this, 250, 202, "enemy4");
+        this.enemy4 = new Enemy3(this, 250, 180, "enemy4");
         this.physics.add.collider(this.enemy4.sprite, platformGroup);
         this.physics.add.overlap(this.player.sprite, this.enemy4.sprite);
 
-        this.enemy5 = new Enemy3(this, 1000, 144, "enemy5");
+        this.enemy5 = new Enemy3(this, 1000, 120, "enemy5");
         this.physics.add.collider(this.enemy5.sprite, platformGroup);
         this.physics.add.overlap(this.player.sprite, this.enemy5.sprite);
 
-        this.enemy6 = new Enemy3(this, 600, 334, "enemy6");
+        this.enemy6 = new Enemy3(this, 600, 300, "enemy6");
         this.physics.add.collider(this.enemy6.sprite, platformGroup);
         this.physics.add.overlap(this.player.sprite, this.enemy6.sprite);
 

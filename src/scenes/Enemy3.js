@@ -1,14 +1,10 @@
 import Phaser from "phaser";
 
 export default class Enemy3 {
-    constructor(scene, x, y, key) {
+    constructor(scene, x, y, key) { 
 
-
-        
-        this.scene = scene;
-        
+        this.scene = scene; 
         const anims = scene.anims;
-
         this.key = key;
         this.brunt = 25;
         this.sightRange = 64;
@@ -17,51 +13,50 @@ export default class Enemy3 {
         this.isTakingDamage = false;
         this.alive = true;
 
-
         anims.create({
-            key: 'walkEnemy',
+            key: 'walkEnemy3',
             frames: anims.generateFrameNumbers('enemyWalk3', { start: 0, end: 5 }),
             frameRate: 10,
             repeat: -1
         });
     
         anims.create({
-            key: 'idleEnemy',
+            key: 'idleEnemy3',
             frames: anims.generateFrameNumbers('enemyIdle3', { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
     
         anims.create({
-            key: 'attackEnemy',
+            key: 'attackEnemy3',
             frames: anims.generateFrameNumbers('enemyAttack3', { start: 0, end: 5 }),
             frameRate: 10,
             //repeat: -1
         });
 
         anims.create({
-            key: 'hurtEnemy',
+            key: 'hurtEnemy3',
             frames: anims.generateFrameNumbers('enemyHurt3', { start: 0, end: 1 }),
             frameRate: 10,
             repeat: -1
         });
 
         anims.create({
-            key: 'deathEnemy',
+            key: 'deathEnemy3',
             frames: anims.generateFrameNumbers('enemyDeath3', { start: 0, end: 5 }),
             frameRate: 10
         });
 
         this.sprite = scene.physics.add
-        .sprite(x, y, 'idleEnemy', 0)
-        .setBodySize(10, 30)
+        .sprite(x, y, 'idleEnemy3', 0)
+        .setBodySize(16, 48)
         .setBounce(0.1)
         .setCollideWorldBounds(true);
     }
     
-    update(time, delta, player) {
+    update(time, delta) {
         let enemyCenter = this.sprite.getCenter();
-        let playerCenter = player.sprite.getCenter();
+        let playerCenter = this.scene.player.sprite.getCenter();
 
         if (this.sprite.getCenter().y > 560) 
         {
@@ -72,7 +67,7 @@ export default class Enemy3 {
         if (this.healthPoints > 0){
             if (this.isTakingDamage)
             {
-                this.sprite.play('hurtEnemy', true);
+                this.sprite.play('hurtEnemy3', true);
             }
             else if (Math.abs(enemyCenter.x - playerCenter.x) < this.sightRange)
             {
@@ -81,9 +76,9 @@ export default class Enemy3 {
                     if (!this.isAttacking && this.alive)
                     {
                         this.sprite.setVelocityX(0);
-                        this.sprite.play('idleEnemy', true);
+                        this.sprite.play('idleEnemy3', true);
                         this.isAttacking = true;
-                        let attackDelay = this.scene.time.delayedCall(500, () => this.attackPlayer(player));
+                        let attackDelay = this.scene.time.delayedCall(500, () => this.attackPlayer(this.scene.player));
                     
                     }
                 }
@@ -93,13 +88,13 @@ export default class Enemy3 {
             else
             {
                 this.sprite.setVelocityX(0);
-                this.sprite.play('idleEnemy', true);
+                this.sprite.play('idleEnemy3', true);
             }
         }
         else
         {
             this.sprite.setVelocityX(0);
-            this.sprite.play('deathEnemy', true);
+            this.sprite.play('deathEnemy3', true);
             this.alive = false;
             this.scene.enemiesList.splice(this.scene.enemiesList.indexOf(this), 1);
             let enemy1DestroyDelay = this.scene.time.delayedCall(1100, this.destroy());
@@ -124,21 +119,21 @@ export default class Enemy3 {
         else
         {
             this.sprite.setVelocityX(0);
-            this.sprite.play('idleEnemy', true);
+            this.sprite.play('idleEnemy3', true);
         }
     }
 
     moveLeft()
     {
         this.sprite.setVelocityX(-20);
-        this.sprite.play('walkEnemy', true);
+        this.sprite.play('walkEnemy3', true);
         this.sprite.setFlipX(true);
     }
 
     moveRight()
     {
         this.sprite.setVelocityX(20);
-        this.sprite.play('walkEnemy', true);
+        this.sprite.play('walkEnemy3', true);
         this.sprite.setFlipX(false);
     }
 
@@ -149,7 +144,7 @@ export default class Enemy3 {
 
     attackPlayer(player)
     {
-        this.sprite.play('attackEnemy', true);
+        this.sprite.play('attackEnemy3', true);
 
         if (this.checkOverlap(this.sprite.getCenter(), player.sprite.getCenter()))
         {

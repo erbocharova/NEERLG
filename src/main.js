@@ -6,18 +6,18 @@ import DeathScene from './scenes/DeathScene'
 
 const config = {
 	type: Phaser.AUTO,
-	width: 1024, 
+	width: 3072, 
 	zoom:2,
 	pixelArt: true,
 	height: 576,
 	physics: {
 		default: 'arcade',
 		arcade: {
-			gravity: { y: 300 },
+			gravity: { x:0, y: 300 },
 			debug: false
 		}
 	},
-	scene: [Level1Scene, Level2Scene, EndScene, DeathScene]
+	scene: [Level1Scene, EndScene, DeathScene]
 	
 };
 
