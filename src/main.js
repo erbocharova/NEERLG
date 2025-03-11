@@ -14,7 +14,7 @@ const config = {
 		default: 'arcade',
 		arcade: {
 			gravity: { x:0, y: 300 },
-			debug: false
+			debug: true
 		}
 	},
 	scene: [Level1Scene, EndScene, DeathScene]

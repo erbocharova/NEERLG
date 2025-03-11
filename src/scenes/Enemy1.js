@@ -103,7 +103,7 @@ export default class Enemy1{
     }
   
     destroy() {
-      this.sprite.destroy();
+      this.sprite.setActive(false);
     }
 
     moveToPlayer(enemyCenter, playerCenter) {

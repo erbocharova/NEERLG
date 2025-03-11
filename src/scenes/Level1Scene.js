@@ -38,23 +38,23 @@ export default class Level1Scene extends Phaser.Scene {
         this.load.spritesheet('enemyHurt1', 'assets/Enemies/1/Hurt1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyDeath1', 'assets/Enemies/1/Death1.png', { frameWidth: 32, frameHeight: 32 });
 
-        this.load.spritesheet('bossAttack1', 'assets/Bosses/2/Attack1.png', { frameWidth: 72, frameHeight: 72 });
-        this.load.spritesheet('bossIdle1', 'assets/Bosses/2/Idle.png', { frameWidth: 72, frameHeight: 72 });
-        this.load.spritesheet('bossWalk1', 'assets/Bosses/2/Walk.png', { frameWidth: 72, frameHeight: 72 });
-        this.load.spritesheet('bossHurt1', 'assets/Bosses/2/Hurt.png', { frameWidth: 72, frameHeight: 72 });
-        this.load.spritesheet('bossDeath1', 'assets/Bosses/2/Death.png', { frameWidth: 72, frameHeight: 72 });
+        this.load.spritesheet('bossAttack1', 'assets/Bosses/2/Attack1.png', { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossIdle1', 'assets/Bosses/2/Idle.png', { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossWalk1', 'assets/Bosses/2/Walk.png', { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossHurt1', 'assets/Bosses/2/Hurt.png', { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossDeath1', 'assets/Bosses/2/Death.png', { frameWidth: 72, frameHeight: 42 });
 
         this.load.image('heart-icon', '/assets/Implant/1 Icons/Icon9_18.png');
     }
 
     create() {
-        this.backgroundImages = this.add.group();
-        this.background0 = this.add.image(512, 288, 'background0');
-        this.background1 = this.add.image(512, 288, 'background1');
-        this.background2 = this.add.image(512, 288, 'background2');
-        this.backgroundImages.add(this.background0);
-        this.backgroundImages.add(this.background1);
-        this.backgroundImages.add(this.background2);
+        this.background0 = this.add.tileSprite(512, 288, 6144, 576, 'background0');
+        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'background1');
+        this.background2 = this.add.tileSprite(512, 288, 6144, 576, 'background2');
+
+        this.background0.tilePositionX = 0;
+        this.background1.tilePositionX = 0;
+        this.background2.tilePositionX = 0;
 
         this.add.text(0, 0, 'Level 1', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.add.text(0, 16, 'Press W, A, D to move', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
@@ -90,6 +90,8 @@ export default class Level1Scene extends Phaser.Scene {
         // Добавление игрока
         this.player = new Player(this, 32, 368);
         this.physics.add.collider(this.player.sprite, platformGroup);
+
+        this.cameras.main.startFollow(this.player.sprite, true);
 
         // Добавление врагов
         this.enemiesList = [];
@@ -164,7 +166,6 @@ export default class Level1Scene extends Phaser.Scene {
     }
 
     update(time, delta) {
-        this.followPlayer();
         this.updateHealthPosition();
         this.moveBackgroundImage();
         
@@ -185,11 +186,6 @@ export default class Level1Scene extends Phaser.Scene {
         else {
             this.scene.switch('DeathScene');
         }
-    }
-
-    followPlayer() {
-        const camera = this.cameras.main;
-        camera.startFollow(this.player.sprite);
     }
 
     DrawHealthBar(x) {
@@ -213,12 +209,15 @@ export default class Level1Scene extends Phaser.Scene {
     }
 
     moveBackgroundImage() {
-        const cam = this.cameras.main;
-        const newX = cam.worldView.centerX;
-        
-        this.background0.x = newX;
-        this.background1.x = newX;
-        this.background2.x = newX;
+        const newX = this.cameras.main.scrollX;
+
+        const layerWidth0 = this.background0.width;
+        const layerWidth1 = this.background1.width;
+        const layerWidth2 = this.background2.width;
+
+        this.background0.tilePositionX = ((newX * 0.25) % layerWidth0) + layerWidth0;
+        this.background1.tilePositionX = ((newX * 0.5) % layerWidth1) + layerWidth1;
+        this.background2.tilePositionX = ((newX * 0.8) % layerWidth2) + layerWidth2;
+ 
     }
 }
-
