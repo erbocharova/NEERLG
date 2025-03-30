@@ -1,11 +1,30 @@
-import Phaser, { GameObjects } from 'phaser'
+import Phaser from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "./Player";
 //import Enemy3 from "./Enemy3";
 import Enemy1 from "./Enemy1";
-import background1 from "../../public/assets/Tileset/Background/Day/1.png"
-import bgnNight5 from "../../public/assets/Tileset/Background/Night/5.png"
-import bgnNight6 from "../../public/assets/Tileset/Background/Night/6.png"
+import background1 from "../../assets/Tileset/Background/Day/1.png"
+import bgnNight5 from "../../assets/Tileset/Background/Night/5.png"
+import bgnNight6 from "../../assets/Tileset/Background/Night/6.png"
+import tile from "../../assets/Tileset/Tiles/Tiles_01.png"
+import playerIdle from "../../assets/Characters/Cyborg/Cyborg_idle.png"
+import playerRun from "../../assets/Characters/Cyborg/Cyborg_run.png"
+import playerJump from "../../assets/Characters/Cyborg/Cyborg_jump.png"
+import playerHandHit from "../../assets/Characters/Cyborg/Cyborg_attack1.png"
+import playerLegHit from "../../assets/Characters/Cyborg/Cyborg_punch.png"
+import playerHurt from "../../assets/Characters/Cyborg/Cyborg_hurt.png"
+import playerDeath from "../../assets/Characters/Cyborg/Cyborg_death.png"
+import enemyWalk3 from "../../assets/Enemies/3/Walk.png"
+import enemyAttack3 from "../../assets/Enemies/3/Attack.png"
+import enemyIdle3 from "../../assets/Enemies/3/Idle.png"
+import enemyHurt3 from "../../assets/Enemies/3/Hurt.png"
+import enemyDeath3 from "../../assets/Enemies/3/Death.png"
+import enemyAttack1 from "../../assets/Enemies/1/Attack1.png"
+import enemyIdle1 from "../../assets/Enemies/1/Idle1.png"
+import enemyWalk1 from "../../assets/Enemies/1/Walk1.png"
+import enemyHurt1 from "../../assets/Enemies/1/Hurt1.png"
+import enemyDeath1 from "../../assets/Enemies/1/Death1.png"
+import heartIcon from "../../assets/Implant/Icons/Icon9_18.png"
 export default class Level1Scene extends Phaser.Scene
 {
     constructor()
@@ -13,38 +32,40 @@ export default class Level1Scene extends Phaser.Scene
         super({key: 'Level1Scene'});
         this.playerAlive = true;
     }
- 
+
+
+
     preload()
     {
         this.load.image('background1', background1);
         this.load.image('background5', bgnNight5);
-        this.load.image('background6',  bgnNight6);
-        this.load.image('tile', 'assets/Tileset/1 Tiles/Tiles_01.png');
-        this.load.spritesheet('playerIdle', 'assets/Characters/3 Cyborg/Cyborg_idle.png', { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerRun', 'assets/Characters/3 Cyborg/Cyborg_run.png', { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerJump', 'assets/Characters/3 Cyborg/Cyborg_jump.png', { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerHandHit', 'assets/Characters/3 Cyborg/Cyborg_attack1.png', { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerLegHit', 'assets/Characters/3 Cyborg/Cyborg_punch.png', { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerHurt', 'assets/Characters/3 Cyborg/Cyborg_hurt.png', { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerDeath', 'assets/Characters/3 Cyborg/Cyborg_death.png', { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('enemyWalk3', 'assets/Enemies/3/Walk.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyAttack3', 'assets/Enemies/3/Attack.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyIdle3', 'assets/Enemies/3/Idle.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyHurt3', 'assets/Enemies/3/Hurt.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyDeath3', 'assets/Enemies/3/Death.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyAttack1', 'assets/Enemies/1/Attack1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyIdle1', 'assets/Enemies/1/Idle1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyWalk1', 'assets/Enemies/1/Walk1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyHurt1', 'assets/Enemies/1/Hurt1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyDeath1', 'assets/Enemies/1/Death1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.image('heart-icon', '/assets/Implant/1 Icons/Icon9_18.png');
+        this.load.image('background6', bgnNight6);
+        this.load.image('tile', tile);
+        this.load.spritesheet('playerIdle', playerIdle, { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerRun', playerRun, { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerJump', playerJump, { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerHandHit', playerHandHit, { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerLegHit', playerLegHit, { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerHurt', playerHurt, { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('playerDeath', playerDeath, { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet('enemyWalk3', enemyWalk3, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyAttack3', enemyAttack3, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyIdle3', enemyIdle3, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyHurt3', enemyHurt3, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyDeath3', enemyDeath3, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyAttack1', enemyAttack1, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyIdle1', enemyIdle1, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyWalk1', enemyWalk1, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyHurt1', enemyHurt1, { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyDeath1', enemyDeath1, { frameWidth: 32, frameHeight: 32 });
+        this.load.image('heart-icon', heartIcon);
     }
 
     create()
     {
-        this.add.image(512, 288, 'background0');
         this.add.image(512, 288, 'background1');
-        this.add.image(512, 288, 'background2');
+        this.add.image(512, 288, 'background5');
+        this.add.image(512, 288, 'background6');
         this.add.image(880, 30, 'heart-icon');
 
         this.add.text(0, 0, 'Level 1', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });

@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import overlay from "../../public/assets/Tileset/Background/Overlay_illumination_1.png"
+import overlay from "../../assets/Tileset/Background/Overlay_illumination_1.png"
 export default class DeathScene extends Phaser.Scene
 {
     constructor()

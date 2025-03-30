@@ -1,4 +1,4 @@
-import Phaser, { Scale } from 'phaser'
+import Phaser from 'phaser'
 
 import Level1Scene from './scenes/Level1Scene'
 import Level2Scene from './scenes/Level2Scene'
@@ -22,4 +22,4 @@ const config = {
 	
 };
 
-const game = new Phaser.Game(config);
+const game2 = new Phaser.Game(config);
