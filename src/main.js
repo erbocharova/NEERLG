@@ -1,4 +1,5 @@
 import Phaser, { Scale } from 'phaser'
+import MenuScene from './scenes/MenuScene'
 import Level1Scene from './scenes/Level1Scene'
 import Level2Scene from './scenes/Level2Scene'
 import EndScene from './scenes/EndScene'
@@ -17,8 +18,7 @@ const config = {
 			debug: true
 		}
 	},
-	scene: [Level1Scene, EndScene, DeathScene]
-	
+	scene: [MenuScene, Level1Scene, Level2Scene, EndScene, DeathScene]
 };
 
 const game = new Phaser.Game(config);

@@ -1,34 +1,40 @@
-import Phaser, { GameObjects } from 'phaser'
-import ProceduralLevelGenerator from './ProceduralLevelGenerator'
+import Phaser, { Cameras, GameObjects } from 'phaser'
+import ProceduralLevelGenerator from './ProceduralLevelGenerator';
 import Player from "./Player";
 import Enemy1 from "./Enemy1";
 import Enemy3 from "./Enemy3";
-import Platform from "./Platforms"
+import Platform from "./Platforms";
+import HealthGroup from './HealthGroup';
+import HealthPickup from './HealthPickup';
 
-export default class Level2Scene extends Phaser.Scene
-{
-    constructor()
-    {
+export default class Level2Scene extends Phaser.Scene {
+    constructor() {
         super({key: 'Level2Scene'});
         this.playerAlive = true;
     }
  
-    preload()
-    {
-        this.load.image('background1', 'assets/Tileset/Background/Day/1.png');
-        this.load.image('background5', 'assets/Tileset/Background/Night/5.png');
-        this.load.image('background6', 'assets/Tileset/Background/Night/6.png');
-        this.load.image('tile1', 'assets/Tileset/1 Tiles/Tiles_58.png');
-    }
+    preload() {}
 
     create()
     {
-        this.add.image(512, 288, 'background1');
-        this.add.image(512, 288, 'background5');
-        this.add.image(512, 288, 'background6');
-        this.add.image(880, 30, 'heart-icon');
+        localStorage.setItem('currentScene', this.scene.key);
+        console.log('Welcome to Level 2!');
+
+        this.background0 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundNight1');
+        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundNight5');
+        this.background2 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundNight6');
+
+        this.background0.tilePositionX = 0;
+        this.background1.tilePositionX = 0;
+        this.background2.tilePositionX = 0;
 
         this.add.text(0, 0, 'Level 2', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+
+        const camera = this.cameras.main;
+        camera.setSize(1024, 576);
+        camera.setBounds(0, 0, 3072, 576);
+
+        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
 
 
             // Создание игры (автоматическая генерация отключена)
@@ -126,80 +132,78 @@ export default class Level2Scene extends Phaser.Scene
      
         
         this.player = new Player(this, 16, 350);
-        this.physics.add.collider(this.player.sprite, platformGroup);
+        this.physics.add.collider(this.player, platformGroup);
+        this.cameras.main.startFollow(this.player, true);
 
         //создание 3 врагов из класса Enemy1
         this.enemy1 = new Enemy1(this, 100, 530, "enemy1");
-        this.physics.add.collider(this.enemy1.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy1.sprite);
+        this.physics.add.collider(this.enemy1, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy1);
 
         this.enemy2 = new Enemy1(this, 316, 432, "enemy2");
-        this.physics.add.collider(this.enemy2.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy2.sprite);
+        this.physics.add.collider(this.enemy2, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy2);
 
         this.enemy3 = new Enemy1(this, 900, 530, "enemy3");
-        this.physics.add.collider(this.enemy3.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy3.sprite);
+        this.physics.add.collider(this.enemy3, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy3);
 
         //создание 2 врагов из класса Enemy3
         this.enemy4 = new Enemy3(this, 250, 180, "enemy4");
-        this.physics.add.collider(this.enemy4.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy4.sprite);
+        this.physics.add.collider(this.enemy4, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy4);
 
         this.enemy5 = new Enemy3(this, 1000, 120, "enemy5");
-        this.physics.add.collider(this.enemy5.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy5.sprite);
+        this.physics.add.collider(this.enemy5, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy5);
 
         this.enemy6 = new Enemy3(this, 600, 300, "enemy6");
-        this.physics.add.collider(this.enemy6.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy6.sprite);
+        this.physics.add.collider(this.enemy6, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy6);
 
         this.enemiesList = [this.enemy1, this.enemy2, this.enemy3, this.enemy4, this.enemy5, this.enemy6];
 
         //переключение между сценами по кнопке Enter
         this.input.keyboard.on('keydown', function(event) {
-            if (event.key === 'Enter' && this.enemiesList.length === 0) {
+            if (event.key === 'Enter' /*&& this.enemiesList.length === 0*/) {
                 this.scene.switch('EndScene');
             }
         }, this);
     }
 
     update(time, delta) {
-        this.player.DrawHealthBar();
-        if (this.player.sprite.getCenter().y > 550) 
-        {
-            this.player.sprite.setCollideWorldBounds(false);
-            this.scene.switch('DeathScene');
-        }
-
-        if (this.playerAlive)
-        {
-            if (this.player.healthPoints > 0)
-            {
+        this.healthBar.updateHealthPosition(this.player.healthPoints);
+        this.moveBackgroundImage();
+        
+        if (this.playerAlive) {
+            if (this.player.healthPoints > 0) {
                 this.player.update(time, delta);
             }
-            else
-            {
-                this.player.sprite.play('death', true);
+            else {
+                this.player.play('death', true);
                 this.playerAlive = false;
                 let playerDestroyDelay = this.time.delayedCall(800, this.player.destroy);
             }
 
             this.enemiesList.forEach((enemy) => {
-                enemy.update(time, delta, this.player);
+                enemy.update(time, delta);
             })
         }
         else {
             this.scene.switch('DeathScene');
         }
+    }
 
-        
-        
+    moveBackgroundImage() {
+        const newX = this.cameras.main.scrollX;
 
-        //let isAttacking = false;
+        const layerWidth0 = this.background0.width;
+        const layerWidth1 = this.background1.width;
+        const layerWidth2 = this.background2.width;
 
-        //this.physics.add.overlap(this.player.sprite, this.enemy.sprite, (() => this.enemy.attackPlayer(this.player)), (() => isAttacking));
-     }
-     
+        this.background0.tilePositionX = ((newX * 0.25) % layerWidth0) + layerWidth0;
+        this.background1.tilePositionX = ((newX * 0.5) % layerWidth1) + layerWidth1;
+        this.background2.tilePositionX = ((newX * 0.8) % layerWidth2) + layerWidth2;
+ 
+    }
 }
-

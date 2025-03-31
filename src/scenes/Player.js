@@ -1,11 +1,39 @@
-export default class Player {
+import Phaser from "phaser";
+
+export default class Player extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y) {
+        super(scene, x, y, 'playerIdle', 0);
+
+        scene.add.existing(this);
+        scene.physics.add.existing(this, false);
+
         this.scene = scene;
-        const anims = scene.anims;
+        this.maxHealthPoints = 100;
         this.healthPoints = 100;
         this.brunt = 50;
         this.isTakingDamage = false;
         this.alive = true;
+
+        this.setBodySize(16, 48);
+        this.setBounce(0.1);
+        this.setCollideWorldBounds(true);
+
+        this.createAnimations();
+
+        const { W, A, D, SPACE, ENTER, R, F } = Phaser.Input.Keyboard.KeyCodes;
+        this.keys = scene.input.keyboard.addKeys({
+            space: SPACE,
+            enter: ENTER,
+            up: W,
+            left: A,
+            right: D,
+            f: F,
+            r: R,
+        });
+    }
+
+    createAnimations() {
+        const anims = this.scene.anims;
 
         anims.create({
             key: 'run',
@@ -49,60 +77,42 @@ export default class Player {
             frames: anims.generateFrameNumbers('playerDeath', { start: 0, end: 5 }),
             frameRate: 10
         })
-
-        this.sprite = scene.physics.add
-            .sprite(x, y, "playerIdle", 0)
-            .setBodySize(16, 48)
-            .setBounce(0.1)
-            .setCollideWorldBounds(true);
-
-        const { W, A, D, SPACE, ENTER, R, E } = Phaser.Input.Keyboard.KeyCodes;
-        this.keys = scene.input.keyboard.addKeys({
-            space: SPACE,
-            enter: ENTER,
-            up: W,
-            left: A,
-            right: D,
-            e: E,
-            r: R,
-        });
     }
 
 
-
     update(time, delta) {
-        const { keys, sprite } = this;
+        const { keys } = this;
 
-        let playerCenter = this.sprite.getCenter();
+        let playerCenter = this.getCenter();
 
         if (this.isTakingDamage) {
-            this.sprite.play('hurt', true);
+            this.play('hurt', true);
         }
         else {
             if (keys.left.isDown) {
-                sprite.setVelocityX(-100);
-                if (sprite.body.onFloor()) {
-                    sprite.play('run', true);
+                this.setVelocityX(-100);
+                if (this.body.onFloor()) {
+                    this.play('run', true);
                 }
             }
 
             else if (keys.right.isDown) {
-                sprite.setVelocityX(100);
+                this.setVelocityX(100);
 
-                if (sprite.body.onFloor()) {
-                    sprite.play('run', true);
+                if (this.body.onFloor()) {
+                    this.play('run', true);
                 }
             }
 
-            else if (keys.e.isDown || keys.r.isDown) {
+            else if (keys.f.isDown || keys.r.isDown) {
                 if (keys.e.isDown) {
-                    sprite.play('handHit', true);
+                    this.play('handHit', true);
                 }
                 else {
-                    sprite.play('legHit', true);
+                    this.play('legHit', true);
                 }
                 this.scene.enemiesList.forEach((enemy) => {
-                    if (this.checkOverlap(enemy.sprite.getCenter(), playerCenter)) {
+                    if (this.checkOverlap(enemy.getCenter(), playerCenter)) {
                         enemy.takeDamage(this.brunt);
                     }
 
@@ -111,23 +121,23 @@ export default class Player {
 
 
             else {
-                sprite.setVelocityX(0);
-                if (sprite.body.onFloor()) {
-                    sprite.play('idle', true);
+                this.setVelocityX(0);
+                if (this.body.onFloor()) {
+                    this.play('idle', true);
                 }
             }
 
-            if ((keys.space.isDown || keys.up.isDown) && sprite.body.onFloor()) {
-                sprite.setVelocityY(-250);
-                sprite.play('jump', true);
+            if ((keys.space.isDown || keys.up.isDown) && this.body.onFloor()) {
+                this.setVelocityY(-250);
+                this.play('jump', true);
             }
 
 
-            if (sprite.body.velocity.x > 0) {
-                sprite.setFlipX(false);
+            if (this.body.velocity.x > 0) {
+                this.setFlipX(false);
             }
-            else if (sprite.body.velocity.x < 0) {
-                sprite.setFlipX(true);
+            else if (this.body.velocity.x < 0) {
+                this.setFlipX(true);
             }
         }
     }
@@ -144,6 +154,6 @@ export default class Player {
 
 
     destroy() {
-        this.sprite.destroy();
+        super.destroy();
     }
 }

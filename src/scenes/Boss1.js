@@ -1,10 +1,13 @@
 import Phaser from "phaser";
 
-export default class Boss1 {
-    constructor(scene, x, y, key) { 
+export default class Boss1 extends Phaser.Physics.Arcade.Sprite{
+    constructor(scene, x, y, key) {
+        super(scene, x, y, 'idleBoss1', 0);
 
-        this.scene = scene; 
-        const anims = scene.anims;
+        scene.add.existing(this);
+        scene.physics.add.existing(this, false);
+
+        this.scene = scene;
         this.key = key;
         this.brunt = 40;
         this.sightRange = 100;
@@ -12,6 +15,16 @@ export default class Boss1 {
         this.isAttacking = false;
         this.isTakingDamage = false;
         this.alive = true;
+
+        this.setBodySize(72, 104);
+        this.setBounce(0.1);
+        this.setCollideWorldBounds(true);
+
+        this.createAnimations();
+    }
+
+    createAnimations() {
+        const anims = this.scene.anims;
 
         anims.create({
             key: 'walkBoss1',
@@ -45,28 +58,22 @@ export default class Boss1 {
             frames: anims.generateFrameNumbers('bossDeath1', { start: 0, end: 5 }),
             frameRate: 10
         });
-
-        this.sprite = scene.physics.add
-        .sprite(x, y, 'idleBoss1', 0)
-        .setBodySize(72, 104)
-        .setBounce(0.1)
-        .setCollideWorldBounds(true);
     }
     
     update(time, delta) {
-        let enemyCenter = this.sprite.getCenter();
-        let playerCenter = this.scene.player.sprite.getCenter();
+        let enemyCenter = this.getCenter();
+        let playerCenter = this.scene.player.getCenter();
 
-        if (this.sprite.getCenter().y > 560) 
+        if (this.getCenter().y > 560) 
         {
-            this.sprite.setCollideWorldBounds(false);
+            this.setCollideWorldBounds(false);
             this.healthPoints = 0;
         }
 
         if (this.healthPoints > 0){
             if (this.isTakingDamage)
             {
-                this.sprite.play('hurtBoss1', true);
+                this.play('hurtBoss1', true);
             }
             else if (Math.abs(enemyCenter.x - playerCenter.x) < this.sightRange)
             {
@@ -74,8 +81,8 @@ export default class Boss1 {
                 {
                     if (!this.isAttacking && this.alive)
                     {
-                        this.sprite.setVelocityX(0);
-                        this.sprite.play('idleBoss1', true);
+                        this.setVelocityX(0);
+                        this.play('idleBoss1', true);
                         this.isAttacking = true;
                         let attackDelay = this.scene.time.delayedCall(500, () => this.attackPlayer(this.scene.player));
                     
@@ -86,14 +93,14 @@ export default class Boss1 {
             }
             else
             {
-                this.sprite.setVelocityX(0);
-                this.sprite.play('idleBoss1', true);
+                this.setVelocityX(0);
+                this.play('idleBoss1', true);
             }
         }
         else
         {
-            this.sprite.setVelocityX(0);
-            this.sprite.play('deathBoss1', true);
+            this.setVelocityX(0);
+            this.play('deathBoss1', true);
             this.alive = false;
             this.scene.enemiesList.splice(this.scene.enemiesList.indexOf(this), 1);
             let enemy1DestroyDelay = this.scene.time.delayedCall(1100, this.destroy());
@@ -101,7 +108,7 @@ export default class Boss1 {
     }
   
     destroy() {
-      this.sprite.destroy();
+      super.destroy();
     }
 
     moveToPlayer(enemyCenter, playerCenter) {
@@ -117,23 +124,23 @@ export default class Boss1 {
         }
         else
         {
-            this.sprite.setVelocityX(0);
-            this.sprite.play('idleBoss1', true);
+            this.setVelocityX(0);
+            this.play('idleBoss1', true);
         }
     }
 
     moveLeft()
     {
-        this.sprite.setVelocityX(-20);
-        this.sprite.play('walkBoss1', true);
-        this.sprite.setFlipX(true);
+        this.setVelocityX(-20);
+        this.play('walkBoss1', true);
+        this.setFlipX(true);
     }
 
     moveRight()
     {
-        this.sprite.setVelocityX(20);
-        this.sprite.play('walkBoss1', true);
-        this.sprite.setFlipX(false);
+        this.setVelocityX(20);
+        this.play('walkBoss1', true);
+        this.setFlipX(false);
     }
 
     checkOverlap(enemyCenter, playerCenter)
@@ -143,9 +150,9 @@ export default class Boss1 {
 
     attackPlayer(player)
     {
-        this.sprite.play('attackBoss1', true);
+        this.play('attackBoss1', true);
 
-        if (this.checkOverlap(this.sprite.getCenter(), player.sprite.getCenter()))
+        if (this.checkOverlap(this.getCenter(), player.getCenter()))
         {
             player.takeDamage(this.brunt);
         }
