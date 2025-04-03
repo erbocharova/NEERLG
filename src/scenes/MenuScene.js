@@ -21,6 +21,19 @@ import enemyWalk1 from "../../assets/Enemies/1/Walk1.png"
 import enemyHurt1 from "../../assets/Enemies/1/Hurt1.png"
 import enemyDeath1 from "../../assets/Enemies/1/Death1.png"
 import heartIcon from "../../assets/Implant/Icons/Icon9_18.png"
+import startBtn from "../../assets/start.png"
+import continueBtn from "../../assets/continue.png"
+import backgroundDay from "../../assets/Tileset/Background/Day/day.png"
+import bgnDay6 from "../../assets/Tileset/Background/Day/6.png"
+import bgnNight1 from "../../assets/Tileset/Background/Night/1.png"
+import bgnNight4 from "../../assets/Tileset/Background/Night/4.png"
+import tile1 from "../../assets/Tileset/Tiles/Tiles_35.png"
+import door from "../../assets/Tileset/Objects/Door3.png"
+import bossAttack1 from "../../assets/Bosses/2/Attack1.png"
+import bossIdle1 from "../../assets/Bosses/2/Idle.png"
+import bossWalk1 from "../../assets/Bosses/2/Walk.png"
+import bossHurt1 from "../../assets/Bosses/2/Hurt.png"
+import bossDeath1 from "../../assets/Bosses/2/Death.png"
 
 export default class MenuScene extends Phaser.Scene {
     constructor() {
@@ -28,21 +41,21 @@ export default class MenuScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('startButton', 'assets/start.png');
-        this.load.image('continueButton', 'assets/continue.png');
+        this.load.image('startButton', startBtn);
+        this.load.image('continueButton', continueBtn);
 
         this.load.image('backgroundDay1', background1);
-        this.load.image('backgroundDay', 'assets/Tileset/Background/Day/day.png');
-        this.load.image('backgroundDay6', 'assets/Tileset/Background/Day/6.png');
-        this.load.image('backgroundNight1', 'assets/Tileset/Background/Night/1.png');
-        this.load.image('backgroundNight4', 'assets/Tileset/Background/Night/4.png');
+        this.load.image('backgroundDay', backgroundDay);
+        this.load.image('backgroundDay6', bgnDay6);
+        this.load.image('backgroundNight1', bgnNight1);
+        this.load.image('backgroundNight4', bgnNight4);
         this.load.image('backgroundNight5', bgnNight5);
         this.load.image('backgroundNight6', bgnNight6);
 
-        this.load.image('tile1', 'assets/Tileset/1 Tiles/Tiles_35.png');
+        this.load.image('tile1', tile1);
         this.load.image('tile', tile);
 
-        this.load.image('door', 'assets/Tileset/3 Objects/Door3.png');
+        this.load.image('door', door);
 
         this.load.spritesheet('playerIdle', playerIdle, { frameWidth: 48, frameHeight: 48 });
         this.load.spritesheet('playerRun', playerRun, { frameWidth: 48, frameHeight: 48 });
@@ -61,14 +74,14 @@ export default class MenuScene extends Phaser.Scene {
         this.load.spritesheet('enemyAttack1', enemyAttack1, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyIdle1', enemyIdle1, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyWalk1', enemyWalk1, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyHurt1', enemyHurt1 { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('enemyHurt1', enemyHurt1, { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('enemyDeath1', enemyDeath1, { frameWidth: 32, frameHeight: 32 });
 
-        this.load.spritesheet('bossAttack1', 'assets/Bosses/2/Attack1.png', { frameWidth: 72, frameHeight: 42 });
-        this.load.spritesheet('bossIdle1', 'assets/Bosses/2/Idle.png', { frameWidth: 72, frameHeight: 42 });
-        this.load.spritesheet('bossWalk1', 'assets/Bosses/2/Walk.png', { frameWidth: 72, frameHeight: 42 });
-        this.load.spritesheet('bossHurt1', 'assets/Bosses/2/Hurt.png', { frameWidth: 72, frameHeight: 42 });
-        this.load.spritesheet('bossDeath1', 'assets/Bosses/2/Death.png', { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossAttack1', bossAttack1, { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossIdle1', bossIdle1, { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossWalk1', bossWalk1, { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossHurt1', bossHurt1, { frameWidth: 72, frameHeight: 42 });
+        this.load.spritesheet('bossDeath1', bossDeath1, { frameWidth: 72, frameHeight: 42 });
 
         this.load.image('heart-icon', heartIcon);
     }
