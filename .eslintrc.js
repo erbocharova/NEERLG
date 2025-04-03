@@ -6,11 +6,17 @@ module.exports = {
 	},
 	env: {
 		es6: true,
-		browser: true
+		browser: true,
+		node: true
 	},
-    extends: [
+	extends: [
 		'eslint:recommended'
 	],
+	languageOptions: {
+
+		globals: {...globals.browser, ...globals.node}
+
+	},
 	parser: "babel-eslint",
 	rules: {}
 }

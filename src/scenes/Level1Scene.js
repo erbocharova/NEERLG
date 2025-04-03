@@ -1,4 +1,5 @@
-import Phaser, { Cameras, GameObjects } from 'phaser';
+import Phaser from 'phaser'
+import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "./Player";
 import Enemy1 from "./Enemy1";
 import Enemy3 from './Enemy3';

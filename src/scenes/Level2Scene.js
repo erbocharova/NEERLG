@@ -13,7 +13,9 @@ export default class Level2Scene extends Phaser.Scene {
         this.playerAlive = true;
     }
  
-    preload() {}
+    preload()
+    {
+    }
 
     create()
     {
