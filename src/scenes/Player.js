@@ -5,10 +5,12 @@ export default class Player{
         this.scene = scene;
         // Create the animations we need from the player spritesheet
         const anims = scene.anims;
-        this.healthPoints = 1000;
+        this.healthPoints = 100;
         this.brunt = 50;
         this.isTakingDamage = false;
         this.alive = true;
+        this.graphics = scene.add.graphics();
+        this.DrawHealthBar();
 
         anims.create({
             key: 'run',
@@ -55,7 +57,7 @@ export default class Player{
 
         this.sprite = scene.physics.add
         .sprite(x, y, "playerIdle", 0)
-        .setBodySize(10, 30)
+        .setBodySize(10, 40)
         .setBounce(0.1)
         .setCollideWorldBounds(true);
 
@@ -167,4 +169,16 @@ export default class Player{
     destroy() {
       this.sprite.destroy();
     }
-  }
+
+    DrawHealthBar() {
+        // Очистить графику
+        this.graphics.clear();
+
+        // Нарисовать рамку полоски здоровья
+        this.graphics.lineStyle(2, 0xffffff, 1);
+        this.graphics.strokeRect(900, 20, 100, 20);
+
+        this.graphics.fillStyle(0xff0000, 1); // Красный цвет для потери здоровья
+        this.graphics.fillRect(900, 20, this.healthPoints, 20);
+        }
+}
