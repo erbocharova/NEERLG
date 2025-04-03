@@ -1,168 +1,196 @@
 import Phaser from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "./Player";
-//import Enemy3 from "./Enemy3";
 import Enemy1 from "./Enemy1";
-import background1 from "../../assets/Tileset/Background/Day/1.png"
-import bgnNight5 from "../../assets/Tileset/Background/Night/5.png"
-import bgnNight6 from "../../assets/Tileset/Background/Night/6.png"
-import tile from "../../assets/Tileset/Tiles/Tiles_01.png"
-import playerIdle from "../../assets/Characters/Cyborg/Cyborg_idle.png"
-import playerRun from "../../assets/Characters/Cyborg/Cyborg_run.png"
-import playerJump from "../../assets/Characters/Cyborg/Cyborg_jump.png"
-import playerHandHit from "../../assets/Characters/Cyborg/Cyborg_attack1.png"
-import playerLegHit from "../../assets/Characters/Cyborg/Cyborg_punch.png"
-import playerHurt from "../../assets/Characters/Cyborg/Cyborg_hurt.png"
-import playerDeath from "../../assets/Characters/Cyborg/Cyborg_death.png"
-import enemyWalk3 from "../../assets/Enemies/3/Walk.png"
-import enemyAttack3 from "../../assets/Enemies/3/Attack.png"
-import enemyIdle3 from "../../assets/Enemies/3/Idle.png"
-import enemyHurt3 from "../../assets/Enemies/3/Hurt.png"
-import enemyDeath3 from "../../assets/Enemies/3/Death.png"
-import enemyAttack1 from "../../assets/Enemies/1/Attack1.png"
-import enemyIdle1 from "../../assets/Enemies/1/Idle1.png"
-import enemyWalk1 from "../../assets/Enemies/1/Walk1.png"
-import enemyHurt1 from "../../assets/Enemies/1/Hurt1.png"
-import enemyDeath1 from "../../assets/Enemies/1/Death1.png"
-import heartIcon from "../../assets/Implant/Icons/Icon9_18.png"
-export default class Level1Scene extends Phaser.Scene
-{
-    constructor()
-    {
-        super({key: 'Level1Scene'});
+import Enemy3 from './Enemy3';
+import Boss1 from './Boss1';
+import { platformData } from './platformData';
+import Platform from "./Platforms";
+import HealthGroup from './HealthGroup';
+import HealthPickup from './HealthPickup';
+
+export default class Level1Scene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'Level1Scene' });
         this.playerAlive = true;
     }
 
+    preload() { }
 
+    create() {
+        localStorage.setItem('currentScene', this.scene.key);
 
-    preload()
-    {
-        this.load.image('background1', background1);
-        this.load.image('background5', bgnNight5);
-        this.load.image('background6', bgnNight6);
-        this.load.image('tile', tile);
-        this.load.spritesheet('playerIdle', playerIdle, { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerRun', playerRun, { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerJump', playerJump, { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerHandHit', playerHandHit, { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerLegHit', playerLegHit, { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerHurt', playerHurt, { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('playerDeath', playerDeath, { frameWidth: 48, frameHeight: 48 });
-        this.load.spritesheet('enemyWalk3', enemyWalk3, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyAttack3', enemyAttack3, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyIdle3', enemyIdle3, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyHurt3', enemyHurt3, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyDeath3', enemyDeath3, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyAttack1', enemyAttack1, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyIdle1', enemyIdle1, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyWalk1', enemyWalk1, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyHurt1', enemyHurt1, { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('enemyDeath1', enemyDeath1, { frameWidth: 32, frameHeight: 32 });
-        this.load.image('heart-icon', heartIcon);
-    }
+        this.background0 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay1');
+        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay');
+        this.background2 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay6');
 
-    create()
-    {
-        this.add.image(512, 288, 'background1');
-        this.add.image(512, 288, 'background5');
-        this.add.image(512, 288, 'background6');
-        this.add.image(880, 30, 'heart-icon');
+        this.background0.tilePositionX = 0;
+        this.background1.tilePositionX = 0;
+        this.background2.tilePositionX = 0;
 
         this.add.text(0, 0, 'Level 1', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 16, 'Press ←, →, ↑ to move', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 32, 'Press E to hit with hand', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 16, 'Press W, A, D to move', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 32, 'Press F to hit with hand', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.add.text(0, 48, 'Press R to kick', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 64, 'Kill all enemies and press Enter', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 64, 'Kill all enemies', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
 
-            // Создание игры
-        let generator = new ProceduralLevelGenerator();
+        const camera = this.cameras.main;
+        camera.setSize(1024, 576);
+        camera.setBounds(0, 0, 3072, 576);
 
-        let platforms = generator.generateLevel();
+        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
 
+        // Создание платформ
         let platformGroup = this.physics.add.staticGroup();
+        let customPlatforms = [];
 
-        let platformList = [];
-        for (let i = 0; i < platforms.length; i++)
-        {
-            for (let index = platforms[i].leftEdge; index <= platforms[i].rightEdge; index++)
-            {
-                platformList.push({
-                    x: index * 32 + 16,
-                    y: platforms[i].platformHeight * 32 + 16  
-                    });
+        for (let i = 0; i < platformData.length; i += 1) {
+            for (let j = 0; j < 1; j += 1) {
+                let platform = new Platform(this, platformData[i][j], platformData[i][j + 1]);
+                customPlatforms.push(platform);
             }
         }
 
-        platformList.forEach(platform => {
+        customPlatforms.forEach(platform => {
             platformGroup.create(platform.x, platform.y, 'tile');
         });
 
-     
-        
-        this.player = new Player(this, 16, 368);
-        this.physics.add.collider(this.player.sprite, platformGroup);
+        // Добавление игрока
+        this.player = new Player(this, 100, 368);
+        this.physics.add.collider(this.player, platformGroup);
+
+        this.cameras.main.startFollow(this.player, true);
+
+        // Добавление врагов
+        this.enemiesList = [];
+
+        this.enemy1 = new Enemy1(this, 256, 512, "enemy1");
+        this.physics.add.collider(this.enemy1, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy1);
+        this.enemiesList.push(this.enemy1);
+
+        this.enemy2 = new Enemy1(this, 448, 448, "enemy2");
+        this.physics.add.collider(this.enemy2, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy2);
+        this.enemiesList.push(this.enemy2);
+
+        this.enemy3 = new Enemy1(this, 64, 320, "enemy3");
+        this.physics.add.collider(this.enemy3, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy3);
+        this.enemiesList.push(this.enemy3);
+
+        this.miniBoss1 = new Enemy3(this, 800, 270, "miniBoss1");
+        this.physics.add.collider(this.miniBoss1, platformGroup);
+        this.physics.add.overlap(this.player, this.miniBoss1);
+        this.enemiesList.push(this.miniBoss1);
+
+        this.enemy4 = new Enemy1(this, 1152, 480, "enemy4");
+        this.physics.add.collider(this.enemy4, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy4);
+        this.enemiesList.push(this.enemy4);
+
+        this.enemy5 = new Enemy1(this, 1580, 448, "enemy5");
+        this.physics.add.collider(this.enemy5, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy5);
+        this.enemiesList.push(this.enemy5);
+
+        this.enemy6 = new Enemy1(this, 1696, 160, "enemy6");
+        this.physics.add.collider(this.enemy6, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy6);
+        this.enemiesList.push(this.enemy6);
+
+        this.enemy7 = new Enemy1(this, 2368, 480, "enemy7");
+        this.physics.add.collider(this.enemy7, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy7);
+        this.enemiesList.push(this.enemy7);
+
+        this.enemy8 = new Enemy1(this, 2176, 480, "enemy8");
+        this.physics.add.collider(this.enemy8, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy8);
+        this.enemiesList.push(this.enemy8);
+
+        this.enemy9 = new Enemy1(this, 2048, 480, "enemy9");
+        this.physics.add.collider(this.enemy9, platformGroup);
+        this.physics.add.overlap(this.player, this.enemy9);
+        this.enemiesList.push(this.enemy9);
+
+        this.miniBoss2 = new Enemy3(this, 1856, 460, "miniBoss2");
+        this.physics.add.collider(this.miniBoss2, platformGroup);
+        this.physics.add.overlap(this.player, this.miniBoss2);
+        this.enemiesList.push(this.miniBoss2);
+
+        this.boss = new Boss1(this, 2784, 472, "boss");
+        this.physics.add.collider(this.boss, platformGroup);
+        this.physics.add.overlap(this.player, this.boss);
+        this.enemiesList.push(this.boss);
 
 
-        //this.enemy3 = new Enemy3(this, 502, 530);                     убрала героя из другого класса
-        //this.physics.add.collider(this.enemy3.sprite, platformGroup);
-        //this.physics.add.overlap(this.player.sprite, this.enemy3.sprite);
+        this.healthPickups = [];
+        const healthPickup = new HealthPickup(this, 132, 512);
+        this.healthPickups.push(healthPickup);
 
-        this.enemy1 = new Enemy1(this, 900, 530, "enemy1");
-        this.physics.add.collider(this.enemy1.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy1.sprite);
+        this.healthPickups.forEach((pickup) => {
+            pickup.setInteractive();
+            this.input.keyboard.on('keydown-E', (event) => {
+                const playerDistance = Phaser.Math.Distance.Between(this.player.x, this.player.y, pickup.x, pickup.y);
+                if (playerDistance < 16) {
+                    this.player.healthPoints = pickup.collect(this.player.maxHealthPoints, this.player.healthPoints);
+                    console.log('хилл сюда!');
+                }
+            });
+        })
 
-        this.enemy2 = new Enemy1(this, 100, 530, "enemy2");
-        this.physics.add.collider(this.enemy2.sprite, platformGroup);
-        this.physics.add.overlap(this.player.sprite, this.enemy2.sprite);
-        
-        //let enemiesGroup = this.add.group(this.enemy1, this.enemy2);
-
-        this.enemiesList = [this.enemy1, this.enemy2];
-
-        //переключение между сценами по кнопке Enter
-        this.input.keyboard.on('keydown', function(event) {
-            if (event.key === 'Enter'/* && this.enemiesList.length === 0*/) {
+        // переключение между уровнями
+        const doorToNextLevel = this.add.image(3056, 432, 'door')
+            .setInteractive()
+            .on('pointerdown', () => {
                 this.scene.switch('Level2Scene');
-            }
-        }, this);
-
+            });
     }
 
     update(time, delta) {
-        this.player.DrawHealthBar();
-        if (this.playerAlive)
-        {
-            if (this.player.healthPoints > 0)
-            {
+        this.healthBar.updateHealthPosition(this.player.healthPoints);
+        this.moveBackgroundImage();
+
+        if (this.playerAlive) {
+            if (this.player.healthPoints > 0) {
                 this.player.update(time, delta);
             }
-            else
-            {
-                this.player.sprite.play('death', true);
+            else {
+                this.player.play('death', true);
                 this.playerAlive = false;
                 let playerDestroyDelay = this.time.delayedCall(800, this.player.destroy);
             }
 
             this.enemiesList.forEach((enemy) => {
-                enemy.update(time, delta, this.player);
+                enemy.update(time, delta);
             })
         }
         else {
-            this.scene.switch('DeathScene');
+            this.scene.stop();
+            this.scene.start('DeathScene');
         }
-        /*else if (this.enemiesList.length != 0)
-            {
-                this.scene.stop('Scene1');
-                this.scene.launch('Scene2');
-            }*/
+    }
 
-        
-        
+    moveBackgroundImage() {
+        const newX = this.cameras.main.scrollX;
 
-        //let isAttacking = false;
+        const layerWidth0 = this.background0.width;
+        const layerWidth1 = this.background1.width;
+        const layerWidth2 = this.background2.width;
 
-        //this.physics.add.overlap(this.player.sprite, this.enemy.sprite, (() => this.enemy.attackPlayer(this.player)), (() => isAttacking));
-     }
-     
+        this.background0.tilePositionX = ((newX * 0.25) % layerWidth0) + layerWidth0;
+        this.background1.tilePositionX = ((newX * 0.5) % layerWidth1) + layerWidth1;
+        this.background2.tilePositionX = ((newX * 0.8) % layerWidth2) + layerWidth2;
+    }
+
+    /* destroyScene() {
+        console.log(this.background0);
+        if (this.background0) this.background0.destroy();
+        if (this.background1) this.background1.destroy();
+        if (this.background2) this.background2.destroy();
+        if (this.healthBar) {
+            this.healthBar.destroy();
+        }
+    } */
 }
-    
