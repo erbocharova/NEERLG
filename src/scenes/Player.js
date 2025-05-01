@@ -14,7 +14,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         this.isTakingDamage = false;
         this.alive = true;
 
-        this.setBodySize(16, 48);
+        this.setBodySize(40, 40);
         this.setBounce(0.1);
         this.setCollideWorldBounds(true);
 
@@ -36,45 +36,45 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         const anims = this.scene.anims;
 
         anims.create({
+            key: 'idle',
+            frames: anims.generateFrameNumbers('playerSpritesheet', { start: 0, end: 3 }),
+            frameRate: 10
+        });
+
+        anims.create({
             key: 'run',
-            frames: anims.generateFrameNumbers('playerRun', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('playerSpritesheet', { start: 6, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
 
         anims.create({
-            key: 'idle',
-            frames: anims.generateFrameNumbers('playerIdle', { start: 0, end: 3 }),
-            frameRate: 10
-        });
-
-        anims.create({
             key: 'jump',
-            frames: anims.generateFrameNumbers('playerJump', { start: 0, end: 3 }),
+            frames: anims.generateFrameNumbers('playerSpritesheet', { start: 12, end: 15 }),
             frameRate: 10,
         });
 
         anims.create({
             key: 'handHit',
-            frames: anims.generateFrameNumbers('playerHandHit', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('playerSpritesheet', { start: 18, end: 23 }),
             frameRate: 10
         });
 
         anims.create({
             key: 'legHit',
-            frames: anims.generateFrameNumbers('playerLegHit', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('playerSpritesheet', { start: 24, end: 29 }),
             frameRate: 10
         });
 
         anims.create({
             key: 'hurt',
-            frames: anims.generateFrameNumbers('playerHurt', { start: 0, end: 1 }),
+            frames: anims.generateFrameNumbers('playerSpritesheet', { start: 30, end: 31 }),
             frameRate: 10
         });
 
         anims.create({
             key: 'death',
-            frames: anims.generateFrameNumbers('playerDeath', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('playerSpritesheet', { start: 36, end: 41 }),
             frameRate: 10
         })
     }
@@ -105,7 +105,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
             }
 
             else if (keys.f.isDown || keys.r.isDown) {
-                if (keys.e.isDown) {
+                if (keys.f.isDown) {
                     this.play('handHit', true);
                 }
                 else {

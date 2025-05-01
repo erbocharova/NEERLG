@@ -16,7 +16,7 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite{
         this.isTakingDamage = false;
         this.alive = true;
 
-        this.setBodySize(10, 30);
+        this.setBodySize(20, 25);
         this.setBounce(0.1);
         this.setCollideWorldBounds(true);
 
@@ -24,38 +24,39 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite{
     }
 
     createAnimations() {
-        const anims = this.scene.anims;
+        const anims = this.scene.anims;  
 
         anims.create({
-            key: 'walkEnemy1',
-            frames: anims.generateFrameNumbers('enemyWalk1', { start: 0, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-    
-        anims.create({
             key: 'idleEnemy1',
-            frames: anims.generateFrameNumbers('enemyIdle1', { start: 0, end: 3 }),
+            frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 0, end: 3 }),
             frameRate: 10
         });
     
         anims.create({
             key: 'attackEnemy1',
-            frames: anims.generateFrameNumbers('enemyAttack1', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 6, end: 11 }),
             frameRate: 10,
             //repeat: -1
         });
 
         anims.create({
+            key: 'walkEnemy1',
+            frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 12, end: 17 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+
+        anims.create({
             key: 'hurtEnemy1',
-            frames: anims.generateFrameNumbers('enemyHurt1', { start: 0, end: 1 }),
+            frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 18, end: 19 }),
             frameRate: 10,
             repeat: 0
         });
 
         anims.create({
             key: 'deathEnemy1',
-            frames: anims.generateFrameNumbers('enemyDeath1', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 24, end: 29 }),
             frameRate: 10,
             repeat: 0
         });

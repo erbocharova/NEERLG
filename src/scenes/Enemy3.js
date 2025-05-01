@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import HealthPickup from "./HealthPickup";
 
 export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, key) {
@@ -103,6 +104,7 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
             this.setVelocityX(0);
             this.play('deathEnemy3', true);
             this.alive = false;
+            this.spawnHealthPickup();
             this.scene.enemiesList.splice(this.scene.enemiesList.indexOf(this), 1);
             let enemy1DestroyDelay = this.scene.time.delayedCall(1100, this.destroy());
         }
@@ -167,6 +169,10 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
         this.isTakingDamage = true;
         this.healthPoints = this.healthPoints - brunt;
         let timedEvent = this.scene.time.delayedCall(600, () => this.isTakingDamage = false);
+    }
+
+    spawnHealthPickup() {
+        const healthPickup = new HealthPickup(this.scene, this.x, this.y);
     }
 
   }

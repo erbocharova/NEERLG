@@ -7,6 +7,7 @@ export default class HealthPickup extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
         this.setInteractive();
         this.isCollected = false;
+        this.setName('healthPickup');
 
         this.healAmount = 20;
 
