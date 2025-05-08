@@ -10,18 +10,20 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
 
         this.scene = scene;
         this.key = key;
-        this.brunt = 25;
+        this.brunt = 20;
         this.sightRange = 64;
         this.healthPoints = 100;
         this.isAttacking = false;
         this.isTakingDamage = false;
         this.alive = true;
 
-        this.setBodySize(16, 48);
+        this.setBodySize(40, 46);
         this.setBounce(0.1);
+        this.setOffset(0);
         this.setCollideWorldBounds(true);
 
         this.createAnimations();
+        this.on('animationcomplete', this.onAnimationComplete, this);
     }
 
     createAnimations() {
@@ -29,35 +31,35 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
 
         anims.create({
             key: 'walkEnemy3',
-            frames: anims.generateFrameNumbers('enemyWalk3', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 6, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
     
         anims.create({
             key: 'idleEnemy3',
-            frames: anims.generateFrameNumbers('enemyIdle3', { start: 0, end: 3 }),
+            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
     
         anims.create({
             key: 'attackEnemy3',
-            frames: anims.generateFrameNumbers('enemyAttack3', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 24, end: 29 }),
             frameRate: 10,
             //repeat: -1
         });
 
         anims.create({
             key: 'hurtEnemy3',
-            frames: anims.generateFrameNumbers('enemyHurt3', { start: 0, end: 1 }),
+            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 12, end: 13 }),
             frameRate: 10,
             repeat: -1
         });
 
         anims.create({
             key: 'deathEnemy3',
-            frames: anims.generateFrameNumbers('enemyDeath3', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 18, end: 23 }),
             frameRate: 10
         });
     }
@@ -102,16 +104,22 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
         else
         {
             this.setVelocityX(0);
-            this.play('deathEnemy3', true);
-            this.alive = false;
-            this.spawnHealthPickup();
-            this.scene.enemiesList.splice(this.scene.enemiesList.indexOf(this), 1);
-            let enemy1DestroyDelay = this.scene.time.delayedCall(1100, this.destroy());
+            this.die();
         }
     }
   
-    destroy() {
-        super.destroy();
+    onAnimationComplete(animation) {
+        if (animation.key === 'deathEnemy3') {
+            this.anims.stop();
+            this.setFrame(23); // Фиксация последнего кадра
+            this.setActive(false);
+            this.spawnHealthPickup(this.x, this.y);
+        }
+    }
+  
+    die() {
+        this.play('deathEnemy3', true);
+        this.alive = false;
     }
 
     moveToPlayer(enemyCenter, playerCenter) {
@@ -171,8 +179,14 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
         let timedEvent = this.scene.time.delayedCall(600, () => this.isTakingDamage = false);
     }
 
-    spawnHealthPickup() {
-        const healthPickup = new HealthPickup(this.scene, this.x, this.y);
+    spawnHealthPickup(x, y) {
+        const healthPickup = this.scene.healthPickupGroup.getFirstDead();
+        healthPickup.setPosition(x, y);
+        healthPickup.setVisible(true);
+        healthPickup.setActive(true);
+        healthPickup.isActive = true;
+        healthPickup.startBounce();
+
     }
 
   }

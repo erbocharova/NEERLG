@@ -8,7 +8,7 @@ export default class HealthGroup extends Phaser.GameObjects.Group {
         this.x = x;
         this.y = y;
 
-        this.healthImage = this.scene.add.image(x, y, 'heart-icon');
+        this.healthImage = this.scene.add.image(x, y, 'iconset', 17);
         this.add(this.healthImage);
         this.healthBar = this.scene.add.graphics();
         this.add(this.healthBar);
@@ -21,7 +21,7 @@ export default class HealthGroup extends Phaser.GameObjects.Group {
         this.healthBar.strokeRect(x, 20, 100, 20);
 
         this.healthBar.fillStyle(0xff0000, 1);
-        this.healthBar.fillRect(x, 20, playerHealthPoints, 20);
+        this.healthBar.fillRect(x, 20, (playerHealthPoints * 100 / this.scene.player.maxHealthPoints), 20);
     }
 
     updateHealthPosition(playerHealthPoints) {

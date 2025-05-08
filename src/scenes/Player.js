@@ -16,6 +16,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.setBodySize(40, 40);
         this.setBounce(0.1);
+        this.setOffset(0);
         this.setCollideWorldBounds(true);
 
         this.createAnimations();
@@ -111,7 +112,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
                 else {
                     this.play('legHit', true);
                 }
-                this.scene.enemiesList.forEach((enemy) => {
+                this.scene.enemiesGroup.getChildren().forEach((enemy) => {
                     if (this.checkOverlap(enemy.getCenter(), playerCenter)) {
                         enemy.takeDamage(this.brunt);
                     }

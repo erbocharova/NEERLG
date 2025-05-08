@@ -1,36 +1,34 @@
 import Phaser from 'phaser'
-import ProceduralLevelGenerator from './ProceduralLevelGenerator';
+import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "./Player";
 import Enemy1 from "./Enemy1";
-import Enemy3 from "./Enemy3";
+import Enemy3 from './Enemy3';
 import Boss1 from './Boss1';
 import { platformData } from './platformData';
 import Platform from "./Platforms";
 import HealthGroup from './HealthGroup';
 import HealthPickup from './HealthPickup';
 
-export default class Level2Scene extends Phaser.Scene {
+export default class Level3Scene extends Phaser.Scene {
     constructor() {
-        super({ key: 'Level2Scene' });
+        super({ key: 'Level3Scene' });
         this.playerAlive = true;
     }
 
-    preload() {
-    }
+    preload() { }
 
     create() {
         localStorage.setItem('currentScene', this.scene.key);
-        console.log('Welcome to Level 2!');
 
-        this.background0 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundNight1');
-        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundNight5');
-        this.background2 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundNight6');
+        this.background0 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay1');
+        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay4');
+        this.background2 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay6');
 
         this.background0.tilePositionX = 0;
         this.background1.tilePositionX = 0;
         this.background2.tilePositionX = 0;
 
-        this.add.text(0, 0, 'Level 2', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 0, 'Level 3', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
 
         const camera = this.cameras.main;
         camera.setSize(1024, 576);
@@ -54,7 +52,7 @@ export default class Level2Scene extends Phaser.Scene {
         }
 
         platformList.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tileset', 1);
+            platformGroup.create(platform.x, platform.y, 'tileset', 2);
         });
 
         // Создание платформы босса (с помощью platformData.js)
@@ -68,12 +66,17 @@ export default class Level2Scene extends Phaser.Scene {
         }
 
         customPlatforms.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tileset', 1);
+            platformGroup.create(platform.x, platform.y, 'tileset', 2);
         });
 
-        this.player = new Player(this, 16, 350);
+        // Добавление игрока
+        this.player = new Player(this, platformList[0].x + 16, platformList[0].y - 48);
+        this.player.setOrigin(0.5, 0.5);
         this.physics.add.collider(this.player, platformGroup);
+
         this.cameras.main.startFollow(this.player, true);
+
+        // Добавление врагов
 
         this.enemiesGroup = this.physics.add.group();
 
@@ -100,7 +103,7 @@ export default class Level2Scene extends Phaser.Scene {
         const doorToNextLevel = this.add.image(3056, 432, 'door')
             .setInteractive()
             .on('pointerdown', () => {
-                this.scene.switch('Level3Scene');
+                this.scene.switch('EndScene');
             });
     }
 
@@ -139,7 +142,6 @@ export default class Level2Scene extends Phaser.Scene {
         this.background0.tilePositionX = ((newX * 0.25) % layerWidth0) + layerWidth0;
         this.background1.tilePositionX = ((newX * 0.5) % layerWidth1) + layerWidth1;
         this.background2.tilePositionX = ((newX * 0.8) % layerWidth2) + layerWidth2;
-
     }
 
     createEnemies(platforms) {

@@ -18,9 +18,11 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite{
 
         this.setBodySize(20, 25);
         this.setBounce(0.1);
+        this.setOffset(0);
         this.setCollideWorldBounds(true);
 
         this.createAnimations();
+        this.on('animationcomplete', this.onAnimationComplete, this);
     }
 
     createAnimations() {
@@ -102,15 +104,21 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite{
         else
         {
             this.setVelocityX(0);
-            this.play('deathEnemy1', true);
-            this.alive = false;
-            this.scene.enemiesList.splice(this.scene.enemiesList.indexOf(this), 1);
-            let enemy1DestroyDelay = this.scene.time.delayedCall(1100, this.destroy());
+            this.die();
+        }
+    }
+
+    onAnimationComplete(animation) {
+        if (animation.key === 'deathEnemy1') {
+            this.anims.stop(); // Остановка анимации
+            this.setFrame(29); // Фиксация последнего кадра
+            this.setActive(false);
         }
     }
   
-    destroy() {
-      this.setActive(false);
+    die() {
+        this.play('deathEnemy1', true);
+        this.alive = false;
     }
 
     moveToPlayer(enemyCenter, playerCenter) {

@@ -16,8 +16,9 @@ export default class Boss1 extends Phaser.Physics.Arcade.Sprite{
         this.isTakingDamage = false;
         this.alive = true;
 
-        this.setBodySize(72, 104);
+        this.setBodySize(80, 40);
         this.setBounce(0.1);
+        this.setOffset(0);
         this.setCollideWorldBounds(true);
 
         this.createAnimations();
@@ -28,34 +29,34 @@ export default class Boss1 extends Phaser.Physics.Arcade.Sprite{
 
         anims.create({
             key: 'walkBoss1',
-            frames: anims.generateFrameNumbers('bossWalk1', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 6, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
     
         anims.create({
             key: 'idleBoss1',
-            frames: anims.generateFrameNumbers('bossIdle1', { start: 0, end: 3 }),
+            frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 0, end: 3 }),
             frameRate: 10,
             repeat: -1
         });
     
         anims.create({
             key: 'attackBoss1',
-            frames: anims.generateFrameNumbers('bossAttack1', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 24, end: 29 }),
             frameRate: 10
         });
 
         anims.create({
             key: 'hurtBoss1',
-            frames: anims.generateFrameNumbers('bossHurt1', { start: 0, end: 1 }),
+            frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 12, end: 13 }),
             frameRate: 10,
             repeat: -1
         });
 
         anims.create({
             key: 'deathBoss1',
-            frames: anims.generateFrameNumbers('bossDeath1', { start: 0, end: 5 }),
+            frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 18, end: 23 }),
             frameRate: 10
         });
     }

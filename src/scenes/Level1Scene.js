@@ -21,7 +21,7 @@ export default class Level1Scene extends Phaser.Scene {
         localStorage.setItem('currentScene', this.scene.key);
 
         this.background0 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay1');
-        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay');
+        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay7');
         this.background2 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay6');
 
         this.background0.tilePositionX = 0;
@@ -46,19 +46,17 @@ export default class Level1Scene extends Phaser.Scene {
         let platformGroup = this.physics.add.staticGroup();
 
         let platformList = [];
-        for (let i = 0; i < platforms.length; i++)
-        {
-            for (let index = platforms[i].leftEdge; index <= platforms[i].rightEdge; index++)
-            {
+        for (let i = 0; i < platforms.length; i++) {
+            for (let index = platforms[i].leftEdge; index <= platforms[i].rightEdge; index++) {
                 platformList.push({
                     x: index * 32 + 16,
-                    y: platforms[i].platformHeight * 32 + 16  
-                    });
+                    y: platforms[i].platformHeight * 32 + 16
+                });
             }
         }
 
         platformList.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tile');
+            platformGroup.create(platform.x, platform.y, 'tileset', 0);
         });
 
         // Создание платформы босса (с помощью platformData.js)
@@ -72,33 +70,38 @@ export default class Level1Scene extends Phaser.Scene {
         }
 
         customPlatforms.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tile');
+            platformGroup.create(platform.x, platform.y, 'tileset', 0);
         });
-
-        console.log(platformGroup);
 
         // Добавление игрока
         this.player = new Player(this, platformList[0].x + 16, platformList[0].y - 48);
-        this.player.setOrigin(0.5, 0.3);
+        this.player.setOrigin(0.5, 0.5);
         this.physics.add.collider(this.player, platformGroup);
 
         this.cameras.main.startFollow(this.player, true);
 
         // Добавление врагов
 
+        this.enemiesGroup = this.physics.add.group();
+
         this.createEnemies(platforms);
 
-        this.enemiesList.forEach(enemy => {
-            this.physics.add.collider(enemy, platformGroup);
-            this.physics.add.overlap(this.player, enemy);
-        })
-
         this.boss = new Boss1(this, 2784, 472, "boss");
-        this.physics.add.collider(this.boss, platformGroup);
-        this.physics.add.overlap(this.player, this.boss);
-        this.enemiesList.push(this.boss);
+        this.enemiesGroup.add(this.boss);
 
-        this.physics.add.overlap(this.player, this.children.getByName('healthPickup'), this.pickupHealth, null, this);
+        this.physics.add.collider(this.enemiesGroup, platformGroup);
+        this.physics.add.overlap(this.player, this.enemiesGroup);
+
+        // Создание лекарств
+
+        this.healthPickupGroup = this.physics.add.group();
+        for (let i = 0; i < 10; i++) {
+            let healthPickup = new HealthPickup(this, 0, 0);
+            this.healthPickupGroup.add(healthPickup).killAndHide(healthPickup);
+        }
+        this.physics.add.collider(this.healthPickupGroup, platformGroup);
+
+        this.physics.add.overlap(this.player, this.healthPickupGroup, this.pickupHealth, null, this);
 
         // переключение между уровнями
         const doorToNextLevel = this.add.image(3056, 432, 'door')
@@ -122,13 +125,14 @@ export default class Level1Scene extends Phaser.Scene {
                 let playerDestroyDelay = this.time.delayedCall(800, this.player.destroy);
             }
 
-            this.enemiesList.forEach((enemy) => {
-                enemy.update(time, delta);
+            this.enemiesGroup.getChildren().forEach(enemy => {
+                if (enemy.active){
+                    enemy.update();
+                }
             })
         }
         else {
-            this.scene.stop();
-            this.scene.start('DeathScene');
+            this.scene.switch('DeathScene');
         }
     }
 
@@ -147,7 +151,6 @@ export default class Level1Scene extends Phaser.Scene {
     createEnemies(platforms) {
         const tileSize = 32;
         platforms.splice(0, 1);
-        this.enemiesList = [];
         let enemy1Count = 0;
         let enemy3Count = 0;
 
@@ -166,15 +169,15 @@ export default class Level1Scene extends Phaser.Scene {
             for (let i = 0; i < enemiesCount; i++) {
                 const platformX = Math.floor(Math.random() * (rightEdgePx - leftEdgePx + 1)) + leftEdgePx;
                 const enemyType = enemy1Count / 3 > enemy3Count ? "Enemy3" : "Enemy1";
-                const key = `${enemyType}_${this.enemiesList.length}`;
+                const key = `${enemyType}_${this.enemiesGroup.getLength()}`;
 
                 if (enemyType == "Enemy1") {
                     const enemy = new Enemy1(this, platformX, platform.platformHeight * tileSize - 25, key);
-                    this.enemiesList.push(enemy);
+                    this.enemiesGroup.add(enemy);
                     enemy1Count++;
                 } else {
                     const enemy = new Enemy3(this, platformX, platform.platformHeight * tileSize - 48, key);
-                    this.enemiesList.push(enemy);
+                    this.enemiesGroup.add(enemy);
                     enemy3Count++;
                 }
             }
@@ -182,13 +185,19 @@ export default class Level1Scene extends Phaser.Scene {
     }
 
     pickupHealth(player, healthPickup) {
-        if (player.healthPoints + healthPickup.healAmount <= player.maxHealthPoints) {
-            player.healthPoints += healthPickup.healAmount;
+        if (healthPickup.isActive) {
+            switch (true) {
+                case player.healthPoints === player.maxHealthPoints:
+                    break;
+                case player.healthPoints + healthPickup.healAmount <= player.maxHealthPoints:
+                    player.healthPoints += healthPickup.healAmount;
+                    healthPickup.destroy();
+                    break;
+                case player.healthPoints + healthPickup.healAmount > player.maxHealthPoints:
+                    player.healthPoints = player.maxHealthPoints;
+                    healthPickup.destroy();
+                    break;
+            }
         }
-        else {
-            player.healthPoints = player.maxHealthPoints;
-        }
-        healthPickup.isCollected = true;
-        healthPickup.destroy();
     }
 }

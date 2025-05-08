@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "Study project by erbocharova",
 	"scripts": {
-		"start": "bun index.html --outdir=dist",
+		"start": "bun index.html --outdir=dist --sourcemaps=linked",
 		"build": "node esbuild.config.js"
 	},
 	"type": "module",
