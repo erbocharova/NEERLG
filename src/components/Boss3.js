@@ -1,23 +1,22 @@
 import Phaser from "phaser";
-import HealthPickup from "./HealthPickup";
 
-export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
+export default class Boss3 extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, key) {
-        super(scene, x, y, 'enemyIdle3', 0);
+        super(scene, x, y, 'idleBoss3', 0);
 
         scene.add.existing(this);
         scene.physics.add.existing(this, false);
 
         this.scene = scene;
         this.key = key;
-        this.brunt = 20;
-        this.sightRange = 64;
-        this.healthPoints = 100;
+        this.brunt = 40;
+        this.sightRange = 100;
+        this.healthPoints = 400;
         this.isAttacking = false;
         this.isTakingDamage = false;
         this.alive = true;
 
-        this.setBodySize(40, 46);
+        this.setBodySize(80, 50);
         this.setBounce(0.1);
         this.setOffset(0);
         this.setCollideWorldBounds(true);
@@ -28,38 +27,43 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
 
     createAnimations() {
         const anims = this.scene.anims;
+    
+        anims.create({
+            key: 'idleBoss3',
+            frames: anims.generateFrameNumbers('boss3Spritesheet', { start: 0, end: 3 }),
+            frameRate: 12,
+            repeat: -1
+        });
 
         anims.create({
-            key: 'walkEnemy3',
-            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 6, end: 11 }),
+            key: 'walkBoss3',
+            frames: anims.generateFrameNumbers('boss3Spritesheet', { start: 6, end: 9 }),
             frameRate: 12,
             repeat: -1
         });
     
         anims.create({
-            key: 'idleEnemy3',
-            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 0, end: 3 }),
-            frameRate: 12,
-            repeat: -1
-        });
-    
-        anims.create({
-            key: 'attackEnemy3',
-            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 24, end: 29 }),
-            frameRate: 12,
-            //repeat: -1
+            key: 'attackBoss3',
+            frames: anims.generateFrameNumbers('boss3Spritesheet', { start: 12, end: 17 }),
+            frameRate: 12
         });
 
         anims.create({
-            key: 'hurtEnemy3',
-            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 12, end: 13 }),
+            key: 'specialAttackBoss3',
+            frames: anims.generateFrameNumbers('boss3Spritesheet', { start: 18, end: 23 }),
+            frameRate: 12
+        });
+
+        anims.create({
+            key: 'hurtBoss3',
+            frames: anims.generateFrameNumbers('boss3Spritesheet', { start: 24, end: 25 }),
             frameRate: 12,
             repeat: -1
         });
 
         anims.create({
-            key: 'deathEnemy3',
-            frames: anims.generateFrameNumbers('enemy3Spritesheet', { start: 18, end: 23 }),
+            key: 'deathBoss3',
+            frames: anims.generateFrameNumbers('boss3Spritesheet', { start: 30, end: 35 }),
             frameRate: 12
         });
     }
@@ -77,7 +81,7 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
         if (this.healthPoints > 0){
             if (this.isTakingDamage)
             {
-                this.play('hurtEnemy3', true);
+                this.play('hurtBoss3', true);
             }
             else if (Math.abs(enemyCenter.x - playerCenter.x) < this.sightRange)
             {
@@ -86,7 +90,7 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
                     if (!this.isAttacking && this.alive)
                     {
                         this.setVelocityX(0);
-                        this.play('idleEnemy3', true);
+                        this.play('idleBoss3', true);
                         this.isAttacking = true;
                         let attackDelay = this.scene.time.delayedCall(500, () => this.attackPlayer(this.scene.player));
                     
@@ -98,7 +102,7 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
             else
             {
                 this.setVelocityX(0);
-                this.play('idleEnemy3', true);
+                this.play('idleBoss3', true);
             }
         }
         else
@@ -109,59 +113,56 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
     }
   
     onAnimationComplete(animation) {
-        if (animation.key === 'deathEnemy3') {
+        if (animation.key === 'deathBoss3') {
             this.anims.stop();
-            this.setFrame(23); // Фиксация последнего кадра
+            this.setFrame(35);
             this.setActive(false);
-            this.spawnHealthPickup(this.x, this.y);
         }
     }
   
     die() {
-        this.play('deathEnemy3', true);
+        this.play('deathBoss3', true);
         this.alive = false;
     }
 
     moveToPlayer(enemyCenter, playerCenter) {
-        
-
-        if (enemyCenter.x - playerCenter.x > 10)
+        if (enemyCenter.x - playerCenter.x > 20)
         {
             this.moveLeft();
         }
-        else if (enemyCenter.x - playerCenter.x < -10)
+        else if (enemyCenter.x - playerCenter.x < -20)
         {
             this.moveRight();
         }
         else
         {
             this.setVelocityX(0);
-            this.play('idleEnemy3', true);
+            this.play('idleBoss3', true);
         }
     }
 
     moveLeft()
     {
         this.setVelocityX(-20);
-        this.play('walkEnemy3', true);
+        this.play('walkBoss3', true);
         this.setFlipX(true);
     }
 
     moveRight()
     {
         this.setVelocityX(20);
-        this.play('walkEnemy3', true);
+        this.play('walkBoss3', true);
         this.setFlipX(false);
     }
 
     checkOverlap(enemyCenter, playerCenter)
     {
-        return Math.abs(enemyCenter.x - playerCenter.x) < 10 && Math.abs(enemyCenter.y - playerCenter.y) < 10;
+        return Math.abs(enemyCenter.x - playerCenter.x) < 20 && Math.abs(enemyCenter.y - playerCenter.y) < 20;
     }
 
     attackPlayer(player)
     {
-        this.play('attackEnemy3', true);
+        this.play('attackBoss3', true);
 
         if (this.checkOverlap(this.getCenter(), player.getCenter()))
         {
@@ -179,15 +180,4 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
         let timedEvent = this.scene.time.delayedCall(600, () => this.isTakingDamage = false);
     }
 
-    spawnHealthPickup(x, y) {
-        const healthPickup = this.scene.healthPickupGroup.getFirstDead();
-        healthPickup.setPosition(x, y);
-        healthPickup.setVisible(true);
-        healthPickup.setActive(true);
-        healthPickup.isActive = true;
-        healthPickup.startBounce();
-
-    }
-
   }
-

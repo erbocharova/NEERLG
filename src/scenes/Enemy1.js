@@ -31,35 +31,34 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite{
         anims.create({
             key: 'idleEnemy1',
             frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 0, end: 3 }),
-            frameRate: 10
+            frameRate: 12
         });
     
         anims.create({
             key: 'attackEnemy1',
             frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 6, end: 11 }),
-            frameRate: 10,
+            frameRate: 12,
             //repeat: -1
         });
 
         anims.create({
             key: 'walkEnemy1',
             frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 12, end: 17 }),
-            frameRate: 10,
+            frameRate: 12,
             repeat: -1
         });
-
 
         anims.create({
             key: 'hurtEnemy1',
             frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 18, end: 19 }),
-            frameRate: 10,
+            frameRate: 12,
             repeat: 0
         });
 
         anims.create({
             key: 'deathEnemy1',
             frames: anims.generateFrameNumbers('enemy1Spritesheet', { start: 24, end: 29 }),
-            frameRate: 10,
+            frameRate: 12,
             repeat: 0
         });
     }

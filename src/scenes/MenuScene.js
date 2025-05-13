@@ -20,9 +20,12 @@ import iconset from "../../assets/Implant/Icons/Iconset.png"
 import door from "../../assets/Tileset/Objects/Door3.png"
 
 import playerSpritesheet from "../../assets/Characters/Cyborg/Cyborg.png"
+import enemy1Spritesheet from "../../assets/Enemies/1/Enemy1Spritesheet.png"
+import enemy2Spritesheet from "../../assets/Enemies/2/Enemy2Spritesheet.png"
 import enemy3Spritesheet from "../../assets/Enemies/3/Enemy3Spritesheet.png"
-import enemy1Spritesheet from "../../assets/Enemies/1/Enemy1.png"
-import boss1Spritesheet from "../../assets/Bosses/2/Boss1Spritesheet.png"
+import boss1Spritesheet from "../../assets/Bosses/1/Boss1Spritesheet.png"
+import boss2Spritesheet from "../../assets/Bosses/2/Boss2Spritesheet.png"
+import boss3Spritesheet from "../../assets/Bosses/3/Boss3Spritesheet.png"
 
 import startBtn from "../../assets/GUI/Buttons/Start.png"
 import continueBtn from "../../assets/GUI/Buttons/Continue.png"
@@ -53,9 +56,12 @@ export default class MenuScene extends Phaser.Scene {
         this.load.image('door', door);
 
         this.load.spritesheet('playerSpritesheet', playerSpritesheet, { frameWidth: 40, frameHeight: 40});
-        this.load.spritesheet('enemy3Spritesheet', enemy3Spritesheet, { frameWidth: 40, frameHeight: 46 });
         this.load.spritesheet('enemy1Spritesheet', enemy1Spritesheet, {frameWidth: 20, frameHeight: 25});
+        this.load.spritesheet('enemy2Spritesheet', enemy2Spritesheet, {frameWidth: 40, frameHeight: 36});
+        this.load.spritesheet('enemy3Spritesheet', enemy3Spritesheet, { frameWidth: 40, frameHeight: 46 });
         this.load.spritesheet('boss1Spritesheet', boss1Spritesheet, { frameWidth: 80, frameHeight: 40 });
+        this.load.spritesheet('boss2Spritesheet', boss2Spritesheet, { frameWidth: 80, frameHeight: 51 });
+        this.load.spritesheet('boss3Spritesheet', boss3Spritesheet, { frameWidth: 80, frameHeight: 50 });
 
         
         this.load.spritesheet('tileset', tileset, { frameWidth: 32, frameHeight: 32 });

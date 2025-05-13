@@ -38,8 +38,6 @@ export default class Level1Scene extends Phaser.Scene {
         camera.setSize(1024, 576);
         camera.setBounds(0, 0, 3072, 576);
 
-        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
-
         // Создание платформ (с помощью ProceduralLevelGenarator.js)
         let generator = new ProceduralLevelGenerator();
         let platforms = generator.generateLevel();
@@ -109,6 +107,8 @@ export default class Level1Scene extends Phaser.Scene {
             .on('pointerdown', () => {
                 this.scene.switch('Level2Scene');
             });
+
+        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
     }
 
     update(time, delta) {

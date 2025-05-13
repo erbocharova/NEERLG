@@ -2,8 +2,8 @@ import Phaser from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator';
 import Player from "./Player";
 import Enemy1 from "./Enemy1";
-import Enemy3 from "./Enemy3";
-import Boss1 from './Boss1';
+import Enemy2 from '../components/Enemy2';
+import Boss2 from '../components/Boss2';
 import { platformData } from './platformData';
 import Platform from "./Platforms";
 import HealthGroup from './HealthGroup';
@@ -35,8 +35,6 @@ export default class Level2Scene extends Phaser.Scene {
         const camera = this.cameras.main;
         camera.setSize(1024, 576);
         camera.setBounds(0, 0, 3072, 576);
-
-        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
 
         // Создание платформ (с помощью ProceduralLevelGenarator.js)
         let generator = new ProceduralLevelGenerator();
@@ -79,7 +77,7 @@ export default class Level2Scene extends Phaser.Scene {
 
         this.createEnemies(platforms);
 
-        this.boss = new Boss1(this, 2784, 472, "boss");
+        this.boss = new Boss2(this, 2784, 472, "boss");
         this.enemiesGroup.add(this.boss);
 
         this.physics.add.collider(this.enemiesGroup, platformGroup);
@@ -102,6 +100,8 @@ export default class Level2Scene extends Phaser.Scene {
             .on('pointerdown', () => {
                 this.scene.switch('Level3Scene');
             });
+
+        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
     }
 
     update(time, delta) {
@@ -147,7 +147,7 @@ export default class Level2Scene extends Phaser.Scene {
         platforms.splice(0, 1);
         this.enemiesList = [];
         let enemy1Count = 0;
-        let enemy3Count = 0;
+        let enemy2Count = 0;
 
         platforms.forEach(platform => {
             let enemiesCount = 0;
@@ -163,7 +163,7 @@ export default class Level2Scene extends Phaser.Scene {
 
             for (let i = 0; i < enemiesCount; i++) {
                 const platformX = Math.floor(Math.random() * (rightEdgePx - leftEdgePx + 1)) + leftEdgePx;
-                const enemyType = enemy1Count / 3 > enemy3Count ? "Enemy3" : "Enemy1";
+                const enemyType = enemy1Count / 4 > enemy2Count ? "Enemy2" : "Enemy1";
                 const key = `${enemyType}_${this.enemiesGroup.getLength()}`;
 
                 if (enemyType == "Enemy1") {
@@ -171,9 +171,9 @@ export default class Level2Scene extends Phaser.Scene {
                     this.enemiesGroup.add(enemy);
                     enemy1Count++;
                 } else {
-                    const enemy = new Enemy3(this, platformX, platform.platformHeight * tileSize - 48, key);
+                    const enemy = new Enemy2(this, platformX, platform.platformHeight * tileSize - 36, key);
                     this.enemiesGroup.add(enemy);
-                    enemy3Count++;
+                    enemy2Count++;
                 }
             }
         })

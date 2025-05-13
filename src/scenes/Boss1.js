@@ -22,6 +22,7 @@ export default class Boss1 extends Phaser.Physics.Arcade.Sprite{
         this.setCollideWorldBounds(true);
 
         this.createAnimations();
+        this.on('animationcomplete', this.onAnimationComplete, this);
     }
 
     createAnimations() {
@@ -30,34 +31,34 @@ export default class Boss1 extends Phaser.Physics.Arcade.Sprite{
         anims.create({
             key: 'walkBoss1',
             frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 6, end: 11 }),
-            frameRate: 10,
+            frameRate: 12,
             repeat: -1
         });
     
         anims.create({
             key: 'idleBoss1',
             frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 0, end: 3 }),
-            frameRate: 10,
+            frameRate: 12,
             repeat: -1
         });
     
         anims.create({
             key: 'attackBoss1',
             frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 24, end: 29 }),
-            frameRate: 10
+            frameRate: 12
         });
 
         anims.create({
             key: 'hurtBoss1',
             frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 12, end: 13 }),
-            frameRate: 10,
+            frameRate: 12,
             repeat: -1
         });
 
         anims.create({
             key: 'deathBoss1',
             frames: anims.generateFrameNumbers('boss1Spritesheet', { start: 18, end: 23 }),
-            frameRate: 10
+            frameRate: 12
         });
     }
     
@@ -101,15 +102,21 @@ export default class Boss1 extends Phaser.Physics.Arcade.Sprite{
         else
         {
             this.setVelocityX(0);
-            this.play('deathBoss1', true);
-            this.alive = false;
-            this.scene.enemiesList.splice(this.scene.enemiesList.indexOf(this), 1);
-            let enemy1DestroyDelay = this.scene.time.delayedCall(1100, this.destroy());
+            this.die();
         }
     }
   
-    destroy() {
-      super.destroy();
+    onAnimationComplete(animation) {
+        if (animation.key === 'deathBoss1') {
+            this.anims.stop();
+            this.setFrame(23);
+            this.setActive(false);
+        }
+    }
+  
+    die() {
+        this.play('deathBoss1', true);
+        this.alive = false;
     }
 
     moveToPlayer(enemyCenter, playerCenter) {
