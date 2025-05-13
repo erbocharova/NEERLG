@@ -1,13 +1,13 @@
 import Phaser from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator'
-import Player from "./Player";
-import Enemy1 from "./Enemy1";
-import Enemy3 from './Enemy3';
+import Player from "../components/Player";
+import Enemy1 from "../components/Enemy1";
+import Enemy3 from '../components/Enemy3';
 import Boss3 from '../components/Boss3';
 import { platformData } from './platformData';
-import Platform from "./Platforms";
-import HealthGroup from './HealthGroup';
-import HealthPickup from './HealthPickup';
+import Platform from "../components/Platforms";
+import HealthGroup from '../components/HealthGroup';
+import HealthPickup from '../components/HealthPickup';
 
 export default class Level3Scene extends Phaser.Scene {
     constructor() {
