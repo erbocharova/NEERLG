@@ -11,7 +11,7 @@ export default class Boss2 extends Phaser.Physics.Arcade.Sprite{
         this.key = key;
         this.brunt = 40;
         this.sightRange = 100;
-        this.healthPoints = 400;
+        this.healthPoints = 1500;
         this.isAttacking = false;
         this.isTakingDamage = false;
         this.alive = true;

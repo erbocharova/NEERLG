@@ -11,7 +11,7 @@ export default class Enemy2 extends Phaser.Physics.Arcade.Sprite{
         this.key = key;
         this.brunt = 15;
         this.sightRange = 64;
-        this.healthPoints = 80;
+        this.healthPoints = 400;
         this.isAttacking = false;
         this.isTakingDamage = false;
         this.alive = true;

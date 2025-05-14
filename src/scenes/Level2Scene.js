@@ -98,7 +98,9 @@ export default class Level2Scene extends Phaser.Scene {
         const doorToNextLevel = this.add.image(3056, 432, 'door')
             .setInteractive()
             .on('pointerdown', () => {
-                this.scene.switch('Level3Scene');
+                if (this.enemiesGroup.countActive(true) === 0) {
+                    this.scene.switch('Level3Scene');
+                }
             });
 
         this.healthBar = new HealthGroup(this, camera.width - 144, 30);

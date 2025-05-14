@@ -10,7 +10,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         this.scene = scene;
         this.maxHealthPoints = 100;
         this.healthPoints = 100;
-        this.brunt = 20;
+        this.brunt = 5;
         this.velocityX = 100;
         this.velocityY = 250;
         this.isTakingDamage = false;
@@ -25,7 +25,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         this.createAnimations();
         this.on('animationcomplete', this.onAnimationComplete, this);
 
-        const { W, A, D, SPACE, E, R, F } = Phaser.Input.Keyboard.KeyCodes;
+        const { W, A, D, SPACE, E, F, R } = Phaser.Input.Keyboard.KeyCodes;
         this.keys = scene.input.keyboard.addKeys({
             space: SPACE,
             e: E,
@@ -33,7 +33,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
             left: A,
             right: D,
             f: F,
-            r: R,
+            r: R
         });
     }
 
@@ -116,25 +116,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
                 this.play('specialAttack', true);
                 this.scene.enemiesGroup.getChildren().forEach((enemy) => {
                     if (this.checkOverlap(enemy.getCenter(), playerCenter)) {
-                        enemy.takeDamage(this.brunt);
+                        enemy.takeDamage(this.brunt * 2);
                     }
                 });
             }
             else if (keys.f.isDown) {
-                //this.setVelocityX(0); /* Сохраняет скорость по X и бьет. Оставить как фичу?*/
                 this.play('handHit', true);
                 this.scene.enemiesGroup.getChildren().forEach((enemy) => {
-                    if (this.checkOverlap(enemy.getCenter(), playerCenter)) {
-                        enemy.takeDamage(this.brunt);
-                    }
+                if (this.checkOverlap(enemy.getCenter(), this.getCenter())) {
+                    enemy.takeDamage(this.brunt);
+                }
                 });
             }
             else if (keys.r.isDown) {
                 this.play('legHit', true);
                 this.scene.enemiesGroup.getChildren().forEach((enemy) => {
-                    if (this.checkOverlap(enemy.getCenter(), playerCenter)) {
-                        enemy.takeDamage(this.brunt);
-                    }
+                if (this.checkOverlap(enemy.getCenter(), this.getCenter())) {
+                    enemy.takeDamage(this.brunt);
+                }
                 });
             }
             else {

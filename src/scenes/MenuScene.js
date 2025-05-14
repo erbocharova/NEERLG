@@ -12,6 +12,7 @@ import bgnNight4 from "../../assets/Tileset/Background/Night/4_1.png"
 import bgnNight5 from "../../assets/Tileset/Background/Night/5.png"
 import bgnNight6 from "../../assets/Tileset/Background/Night/6.png"
 import overlay from "../../assets/Tileset/Background/Overlay_illumination_1.png"
+import overlay1 from "../../assets/Tileset/Background/Overlay_illumination.png"
 
 import tileset from "../../assets/Tileset/Tiles/Tileset.png"
 
@@ -23,6 +24,7 @@ import playerSpritesheet from "../../assets/Characters/Cyborg/Cyborg.png"
 import enemy1Spritesheet from "../../assets/Enemies/1/Enemy1Spritesheet.png"
 import enemy2Spritesheet from "../../assets/Enemies/2/Enemy2Spritesheet.png"
 import enemy3Spritesheet from "../../assets/Enemies/3/Enemy3Spritesheet.png"
+import enemy4Spritesheet from "../../assets/Enemies/4/Enemy4Spritesheet.png"
 import boss1Spritesheet from "../../assets/Bosses/1/Boss1Spritesheet.png"
 import boss2Spritesheet from "../../assets/Bosses/2/Boss2Spritesheet.png"
 import boss3Spritesheet from "../../assets/Bosses/3/Boss3Spritesheet.png"
@@ -59,6 +61,7 @@ export default class MenuScene extends Phaser.Scene {
         this.load.spritesheet('enemy1Spritesheet', enemy1Spritesheet, {frameWidth: 20, frameHeight: 25});
         this.load.spritesheet('enemy2Spritesheet', enemy2Spritesheet, {frameWidth: 40, frameHeight: 36});
         this.load.spritesheet('enemy3Spritesheet', enemy3Spritesheet, { frameWidth: 40, frameHeight: 46 });
+        this.load.spritesheet('enemy4Spritesheet', enemy4Spritesheet, { frameWidth: 40, frameHeight: 25 });
         this.load.spritesheet('boss1Spritesheet', boss1Spritesheet, { frameWidth: 80, frameHeight: 40 });
         this.load.spritesheet('boss2Spritesheet', boss2Spritesheet, { frameWidth: 80, frameHeight: 51 });
         this.load.spritesheet('boss3Spritesheet', boss3Spritesheet, { frameWidth: 80, frameHeight: 50 });
@@ -68,6 +71,7 @@ export default class MenuScene extends Phaser.Scene {
         this.load.spritesheet('iconset', iconset, { frameWidth: 32, frameHeight: 32 });
 
         this.load.image('backgroundDeath', overlay);
+        this.load.image('backgroundEnd', overlay1);
     }
 
     create() {

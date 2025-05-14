@@ -32,7 +32,8 @@ export default class Level1Scene extends Phaser.Scene {
         this.add.text(0, 16, 'Press W, A, D to move', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.add.text(0, 32, 'Hold F to hit with hand', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
         this.add.text(0, 48, 'Hold R to kick', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 64, 'Kill all enemies', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 64, 'Hold E for Special attack (super damage)', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 80, 'Kill all enemies', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
 
         const camera = this.cameras.main;
         camera.setSize(1024, 576);
@@ -105,7 +106,9 @@ export default class Level1Scene extends Phaser.Scene {
         const doorToNextLevel = this.add.image(3056, 432, 'door')
             .setInteractive()
             .on('pointerdown', () => {
-                this.scene.switch('Level2Scene');
+                if (this.enemiesGroup.countActive(true) === 0) {
+                    this.scene.switch('Level2Scene');
+                }
             });
 
         this.healthBar = new HealthGroup(this, camera.width - 144, 30);

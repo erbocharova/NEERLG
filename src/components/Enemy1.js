@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 export default class Enemy1 extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, key) {
-        super(scene, x, y, 'enemyIdle1', 0);
+        super(scene, x, y, 'idleEnemy1', 0);
         
         scene.add.existing(this);
         scene.physics.add.existing(this, false);
@@ -11,7 +11,7 @@ export default class Enemy1 extends Phaser.Physics.Arcade.Sprite{
         this.key = key;
         this.brunt = 10;
         this.sightRange = 64;
-        this.healthPoints = 50;
+        this.healthPoints = 100;
         this.isAttacking = false;
         this.isTakingDamage = false;
         this.alive = true;

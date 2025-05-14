@@ -3,7 +3,7 @@ import HealthPickup from "./HealthPickup";
 
 export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, key) {
-        super(scene, x, y, 'enemyIdle3', 0);
+        super(scene, x, y, 'idleEnemy3', 0);
 
         scene.add.existing(this);
         scene.physics.add.existing(this, false);
@@ -12,7 +12,7 @@ export default class Enemy3 extends Phaser.Physics.Arcade.Sprite{
         this.key = key;
         this.brunt = 20;
         this.sightRange = 64;
-        this.healthPoints = 100;
+        this.healthPoints = 400;
         this.isAttacking = false;
         this.isTakingDamage = false;
         this.alive = true;

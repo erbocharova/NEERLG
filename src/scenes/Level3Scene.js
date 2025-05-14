@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "../components/Player";
-import Enemy1 from "../components/Enemy1";
+import Enemy4 from "../components/Enemy4";
 import Enemy3 from '../components/Enemy3';
 import Boss3 from '../components/Boss3';
 import { platformData } from './platformData';
@@ -101,7 +101,9 @@ export default class Level3Scene extends Phaser.Scene {
         const doorToNextLevel = this.add.image(3056, 432, 'door')
             .setInteractive()
             .on('pointerdown', () => {
-                this.scene.switch('EndScene');
+                if (this.enemiesGroup.countActive(true) === 0) {
+                    this.scene.switch('EndScene');
+                }
             });
 
         this.healthBar = new HealthGroup(this, camera.width - 144, 30);
@@ -148,7 +150,7 @@ export default class Level3Scene extends Phaser.Scene {
         const tileSize = 32;
         platforms.splice(0, 1);
         this.enemiesList = [];
-        let enemy1Count = 0;
+        let enemy4Count = 0;
         let enemy3Count = 0;
 
         platforms.forEach(platform => {
@@ -165,13 +167,13 @@ export default class Level3Scene extends Phaser.Scene {
 
             for (let i = 0; i < enemiesCount; i++) {
                 const platformX = Math.floor(Math.random() * (rightEdgePx - leftEdgePx + 1)) + leftEdgePx;
-                const enemyType = enemy1Count / 3 > enemy3Count ? "Enemy3" : "Enemy1";
+                const enemyType = enemy4Count / 3 > enemy3Count ? "Enemy3" : "Enemy4";
                 const key = `${enemyType}_${this.enemiesGroup.getLength()}`;
 
-                if (enemyType == "Enemy1") {
-                    const enemy = new Enemy1(this, platformX, platform.platformHeight * tileSize - 25, key);
+                if (enemyType == "Enemy4") {
+                    const enemy = new Enemy4(this, platformX, platform.platformHeight * tileSize - 25, key);
                     this.enemiesGroup.add(enemy);
-                    enemy1Count++;
+                    enemy4Count++;
                 } else {
                     const enemy = new Enemy3(this, platformX, platform.platformHeight * tileSize - 48, key);
                     this.enemiesGroup.add(enemy);

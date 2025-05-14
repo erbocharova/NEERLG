@@ -27,16 +27,12 @@ export default class ProceduralLevelGenerator
         let lastHeight = this.platformList[index].platformHeight;
 
         let leftEdge = lastRightEdge + this.getRandomInRange(2, 3);
-        let platformHeight = lastHeight + this.getRandomInRange(-3, 3);
-
-        if (platformHeight < 0){
-            platformHeight = -platformHeight;
-        }
+        let platformHeight =  Math.abs(lastHeight + this.getRandomInRange(-3, 3));
 
         if (platformHeight >= this.levelHeight){
             platformHeight = 14;
         }
-        else if (platformHeight === 1 || platformHeight === 2) {
+        else if (platformHeight <= 2) {
             platformHeight = 3;
         }
 
