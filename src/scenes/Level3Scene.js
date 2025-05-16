@@ -1,17 +1,17 @@
 import Phaser from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator'
 import Player from "../components/Player";
-import Enemy1 from "../components/Enemy1";
+import Enemy4 from "../components/Enemy4";
 import Enemy3 from '../components/Enemy3';
-import Boss1 from '../components/Boss1';
+import Boss3 from '../components/Boss3';
 import { platformData } from './platformData';
 import Platform from "../components/Platforms";
 import HealthGroup from '../components/HealthGroup';
 import HealthPickup from '../components/HealthPickup';
 
-export default class Level1Scene extends Phaser.Scene {
+export default class Level3Scene extends Phaser.Scene {
     constructor() {
-        super({ key: 'Level1Scene' });
+        super({ key: 'Level3Scene' });
         this.playerAlive = true;
     }
 
@@ -21,19 +21,14 @@ export default class Level1Scene extends Phaser.Scene {
         localStorage.setItem('currentScene', this.scene.key);
 
         this.background0 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay1');
-        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay7');
+        this.background1 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay4');
         this.background2 = this.add.tileSprite(512, 288, 6144, 576, 'backgroundDay6');
 
         this.background0.tilePositionX = 0;
         this.background1.tilePositionX = 0;
         this.background2.tilePositionX = 0;
 
-        this.add.text(0, 0, 'Level 1', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 16, 'Press W, A, D to move', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 32, 'Hold F to hit with hand', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 48, 'Hold R to kick', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 64, 'Hold E for Special attack (super damage)', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
-        this.add.text(0, 80, 'Kill all enemies', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+        this.add.text(0, 0, 'Level 3', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
 
         const camera = this.cameras.main;
         camera.setSize(1024, 576);
@@ -55,7 +50,7 @@ export default class Level1Scene extends Phaser.Scene {
         }
 
         platformList.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tileset', 0);
+            platformGroup.create(platform.x, platform.y, 'tileset', 2);
         });
 
         // Создание платформы босса (с помощью platformData.js)
@@ -69,7 +64,7 @@ export default class Level1Scene extends Phaser.Scene {
         }
 
         customPlatforms.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tileset', 0);
+            platformGroup.create(platform.x, platform.y, 'tileset', 2);
         });
 
         // Добавление игрока
@@ -85,7 +80,7 @@ export default class Level1Scene extends Phaser.Scene {
 
         this.createEnemies(platforms);
 
-        this.boss = new Boss1(this, 2784, 472, "boss");
+        this.boss = new Boss3(this, 2784, 472, "boss");
         this.enemiesGroup.add(this.boss);
 
         this.physics.add.collider(this.enemiesGroup, platformGroup);
@@ -107,7 +102,7 @@ export default class Level1Scene extends Phaser.Scene {
             .setInteractive()
             .on('pointerdown', () => {
                 if (this.enemiesGroup.countActive(true) === 0) {
-                    this.scene.switch('Level2Scene');
+                    this.scene.switch('EndScene');
                 }
             });
 
@@ -129,7 +124,7 @@ export default class Level1Scene extends Phaser.Scene {
             }
 
             this.enemiesGroup.getChildren().forEach(enemy => {
-                if (enemy.active){
+                if (enemy.active) {
                     enemy.update();
                 }
             })
@@ -154,7 +149,8 @@ export default class Level1Scene extends Phaser.Scene {
     createEnemies(platforms) {
         const tileSize = 32;
         platforms.splice(0, 1);
-        let enemy1Count = 0;
+        this.enemiesList = [];
+        let enemy4Count = 0;
         let enemy3Count = 0;
 
         platforms.forEach(platform => {
@@ -171,13 +167,13 @@ export default class Level1Scene extends Phaser.Scene {
 
             for (let i = 0; i < enemiesCount; i++) {
                 const platformX = Math.floor(Math.random() * (rightEdgePx - leftEdgePx + 1)) + leftEdgePx;
-                const enemyType = enemy1Count / 3 > enemy3Count ? "Enemy3" : "Enemy1";
+                const enemyType = enemy4Count / 3 > enemy3Count ? "Enemy3" : "Enemy4";
                 const key = `${enemyType}_${this.enemiesGroup.getLength()}`;
 
-                if (enemyType == "Enemy1") {
-                    const enemy = new Enemy1(this, platformX, platform.platformHeight * tileSize - 25, key);
+                if (enemyType == "Enemy4") {
+                    const enemy = new Enemy4(this, platformX, platform.platformHeight * tileSize - 25, key);
                     this.enemiesGroup.add(enemy);
-                    enemy1Count++;
+                    enemy4Count++;
                 } else {
                     const enemy = new Enemy3(this, platformX, platform.platformHeight * tileSize - 48, key);
                     this.enemiesGroup.add(enemy);

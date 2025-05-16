@@ -1,24 +1,24 @@
-import Phaser, { Cameras, GameObjects } from 'phaser'
+import Phaser from 'phaser'
 import ProceduralLevelGenerator from './ProceduralLevelGenerator';
-import Player from "./Player";
-import Enemy1 from "./Enemy1";
-import Enemy3 from "./Enemy3";
-import Platform from "./Platforms";
-import HealthGroup from './HealthGroup';
-import HealthPickup from './HealthPickup';
+import Player from "../components/Player";
+import Enemy1 from "../components/Enemy1";
+import Enemy2 from '../components/Enemy2';
+import Boss2 from '../components/Boss2';
+import { platformData } from './platformData';
+import Platform from "../components/Platforms";
+import HealthGroup from '../components/HealthGroup';
+import HealthPickup from '../components/HealthPickup';
 
 export default class Level2Scene extends Phaser.Scene {
     constructor() {
-        super({key: 'Level2Scene'});
+        super({ key: 'Level2Scene' });
         this.playerAlive = true;
     }
- 
-    preload()
-    {
+
+    preload() {
     }
 
-    create()
-    {
+    create() {
         localStorage.setItem('currentScene', this.scene.key);
         console.log('Welcome to Level 2!');
 
@@ -36,147 +36,80 @@ export default class Level2Scene extends Phaser.Scene {
         camera.setSize(1024, 576);
         camera.setBounds(0, 0, 3072, 576);
 
-        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
-
-
-            // Создание игры (автоматическая генерация отключена)
-        /*let generator = new ProceduralLevelGenerator();
-
+        // Создание платформ (с помощью ProceduralLevelGenarator.js)
+        let generator = new ProceduralLevelGenerator();
         let platforms = generator.generateLevel();
-
         let platformGroup = this.physics.add.staticGroup();
 
         let platformList = [];
-        for (let i = 0; i < platforms.length; i++)
-        {
-            for (let index = platforms[i].leftEdge; index <= platforms[i].rightEdge; index++)
-            {
+        for (let i = 0; i < platforms.length; i++) {
+            for (let index = platforms[i].leftEdge; index <= platforms[i].rightEdge; index++) {
                 platformList.push({
                     x: index * 32 + 16,
-                    y: platforms[i].platformHeight * 32 + 16  
-                    });
+                    y: platforms[i].platformHeight * 32 + 16
+                });
             }
         }
 
         platformList.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tile1');
-        });*/
+            platformGroup.create(platform.x, platform.y, 'tileset', 1);
+        });
 
-        let platformGroup = this.physics.add.staticGroup();
-
-        
+        // Создание платформы босса (с помощью platformData.js)
         let customPlatforms = [];
 
-        //убираем основную платформу, чтобы сделать бесконечную пропасть
-        /*for (let i = 16; i < 384; i += 32){
-            let platform = new Platform(this, i, 560);
-            customPlatforms.push(platform);
+        for (let i = 0; i < platformData.length; i += 1) {
+            for (let j = 0; j < 1; j += 1) {
+                let platform = new Platform(this, platformData[i][j], platformData[i][j + 1]);
+                customPlatforms.push(platform);
+            }
         }
-
-        for (let i = 544; i < 1024; i += 32){
-            let platform = new Platform(this, i, 560);
-            customPlatforms.push(platform);
-        }*/
-
-        for (let i = 16; i < 112; i += 32){
-            let platform = new Platform(this, i, 400);
-            customPlatforms.push(platform);
-        }
-
-        customPlatforms.push(new Platform(this, 144, 304));
-
-        for (let i = 174; i < 334; i += 32){
-            let platform = new Platform(this, i, 464);
-            customPlatforms.push(platform);
-        }
-
-        customPlatforms.push(new Platform(this, 174, 432));
-
-        for (let i = 398; i < 462; i += 32){
-            let platform = new Platform(this, i, 432);
-            customPlatforms.push(platform);
-        }
-
-        for (let i = 526; i < 622; i += 32){
-            let platform = new Platform(this, i, 368);
-            customPlatforms.push(platform);
-        }
-
-        customPlatforms.push(new Platform(this, 494, 338));
-
-        for (let i = 238; i < 430; i += 32){
-            let platform = new Platform(this, i, 240);
-            customPlatforms.push(platform);
-        }
-
-        for (let i = 686; i < 750; i += 32){
-            let platform = new Platform(this, i, 272);
-            customPlatforms.push(platform);
-        }
-
-        customPlatforms.push(new Platform(this, 814, 240));
-
-        for (let i = 782; i < 878; i += 32){
-            let platform = new Platform(this, i, 336);
-            customPlatforms.push(platform);
-        }
-
-        for (let i = 878; i < 1024; i += 32){
-            let platform = new Platform(this, i, 176);
-            customPlatforms.push(platform);
-        }
-
 
         customPlatforms.forEach(platform => {
-            platformGroup.create(platform.x, platform.y, 'tile1');
-        })
+            platformGroup.create(platform.x, platform.y, 'tileset', 1);
+        });
 
-     
-        
         this.player = new Player(this, 16, 350);
         this.physics.add.collider(this.player, platformGroup);
         this.cameras.main.startFollow(this.player, true);
 
-        //создание 3 врагов из класса Enemy1
-        this.enemy1 = new Enemy1(this, 100, 530, "enemy1");
-        this.physics.add.collider(this.enemy1, platformGroup);
-        this.physics.add.overlap(this.player, this.enemy1);
+        this.enemiesGroup = this.physics.add.group();
 
-        this.enemy2 = new Enemy1(this, 316, 432, "enemy2");
-        this.physics.add.collider(this.enemy2, platformGroup);
-        this.physics.add.overlap(this.player, this.enemy2);
+        this.createEnemies(platforms);
 
-        this.enemy3 = new Enemy1(this, 900, 530, "enemy3");
-        this.physics.add.collider(this.enemy3, platformGroup);
-        this.physics.add.overlap(this.player, this.enemy3);
+        this.boss = new Boss2(this, 2784, 472, "boss");
+        this.enemiesGroup.add(this.boss);
 
-        //создание 2 врагов из класса Enemy3
-        this.enemy4 = new Enemy3(this, 250, 180, "enemy4");
-        this.physics.add.collider(this.enemy4, platformGroup);
-        this.physics.add.overlap(this.player, this.enemy4);
+        this.physics.add.collider(this.enemiesGroup, platformGroup);
+        this.physics.add.overlap(this.player, this.enemiesGroup);
 
-        this.enemy5 = new Enemy3(this, 1000, 120, "enemy5");
-        this.physics.add.collider(this.enemy5, platformGroup);
-        this.physics.add.overlap(this.player, this.enemy5);
+        // Создание лекарств
 
-        this.enemy6 = new Enemy3(this, 600, 300, "enemy6");
-        this.physics.add.collider(this.enemy6, platformGroup);
-        this.physics.add.overlap(this.player, this.enemy6);
+        this.healthPickupGroup = this.physics.add.group();
+        for (let i = 0; i < 10; i++) {
+            let healthPickup = new HealthPickup(this, 0, 0);
+            this.healthPickupGroup.add(healthPickup).killAndHide(healthPickup);
+        }
+        this.physics.add.collider(this.healthPickupGroup, platformGroup);
 
-        this.enemiesList = [this.enemy1, this.enemy2, this.enemy3, this.enemy4, this.enemy5, this.enemy6];
+        this.physics.add.overlap(this.player, this.healthPickupGroup, this.pickupHealth, null, this);
 
-        //переключение между сценами по кнопке Enter
-        this.input.keyboard.on('keydown', function(event) {
-            if (event.key === 'Enter' /*&& this.enemiesList.length === 0*/) {
-                this.scene.switch('EndScene');
-            }
-        }, this);
+        // переключение между уровнями
+        const doorToNextLevel = this.add.image(3056, 432, 'door')
+            .setInteractive()
+            .on('pointerdown', () => {
+                if (this.enemiesGroup.countActive(true) === 0) {
+                    this.scene.switch('Level3Scene');
+                }
+            });
+
+        this.healthBar = new HealthGroup(this, camera.width - 144, 30);
     }
 
     update(time, delta) {
         this.healthBar.updateHealthPosition(this.player.healthPoints);
         this.moveBackgroundImage();
-        
+
         if (this.playerAlive) {
             if (this.player.healthPoints > 0) {
                 this.player.update(time, delta);
@@ -187,8 +120,10 @@ export default class Level2Scene extends Phaser.Scene {
                 let playerDestroyDelay = this.time.delayedCall(800, this.player.destroy);
             }
 
-            this.enemiesList.forEach((enemy) => {
-                enemy.update(time, delta);
+            this.enemiesGroup.getChildren().forEach(enemy => {
+                if (enemy.active) {
+                    enemy.update();
+                }
             })
         }
         else {
@@ -206,6 +141,60 @@ export default class Level2Scene extends Phaser.Scene {
         this.background0.tilePositionX = ((newX * 0.25) % layerWidth0) + layerWidth0;
         this.background1.tilePositionX = ((newX * 0.5) % layerWidth1) + layerWidth1;
         this.background2.tilePositionX = ((newX * 0.8) % layerWidth2) + layerWidth2;
- 
+
+    }
+
+    createEnemies(platforms) {
+        const tileSize = 32;
+        platforms.splice(0, 1);
+        this.enemiesList = [];
+        let enemy1Count = 0;
+        let enemy2Count = 0;
+
+        platforms.forEach(platform => {
+            let enemiesCount = 0;
+            let platformLength = platform.rightEdge - platform.leftEdge;
+            const leftEdgePx = platform.leftEdge * tileSize + 16;
+            const rightEdgePx = platform.rightEdge * tileSize + 16;
+
+            if (platformLength <= 3) {
+                enemiesCount = 1;
+            } else if (platformLength > 3) {
+                enemiesCount = 2;
+            }
+
+            for (let i = 0; i < enemiesCount; i++) {
+                const platformX = Math.floor(Math.random() * (rightEdgePx - leftEdgePx + 1)) + leftEdgePx;
+                const enemyType = enemy1Count / 4 > enemy2Count ? "Enemy2" : "Enemy1";
+                const key = `${enemyType}_${this.enemiesGroup.getLength()}`;
+
+                if (enemyType == "Enemy1") {
+                    const enemy = new Enemy1(this, platformX, platform.platformHeight * tileSize - 25, key);
+                    this.enemiesGroup.add(enemy);
+                    enemy1Count++;
+                } else {
+                    const enemy = new Enemy2(this, platformX, platform.platformHeight * tileSize - 36, key);
+                    this.enemiesGroup.add(enemy);
+                    enemy2Count++;
+                }
+            }
+        })
+    }
+
+    pickupHealth(player, healthPickup) {
+        if (healthPickup.isActive) {
+            switch (true) {
+                case player.healthPoints === player.maxHealthPoints:
+                    break;
+                case player.healthPoints + healthPickup.healAmount <= player.maxHealthPoints:
+                    player.healthPoints += healthPickup.healAmount;
+                    healthPickup.destroy();
+                    break;
+                case player.healthPoints + healthPickup.healAmount > player.maxHealthPoints:
+                    player.healthPoints = player.maxHealthPoints;
+                    healthPickup.destroy();
+                    break;
+            }
+        }
     }
 }

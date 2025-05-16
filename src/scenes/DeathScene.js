@@ -1,5 +1,4 @@
 import Phaser from 'phaser'
-import overlay from "../../assets/Tileset/Background/Overlay_illumination_1.png"
 export default class DeathScene extends Phaser.Scene
 {
     constructor()
@@ -8,9 +7,7 @@ export default class DeathScene extends Phaser.Scene
     }
 
     preload()
-    {
-        this.load.image('backgroundDeath', overlay);
-    }
+    {}
 
     create()
     {
@@ -19,7 +16,5 @@ export default class DeathScene extends Phaser.Scene
     }
 
     update(time, delta)
-    {
-
-    }
+    {}
 }

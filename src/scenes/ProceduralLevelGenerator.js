@@ -4,7 +4,7 @@ export default class ProceduralLevelGenerator
 {
     minLenght = 1;
     maxLenght = 6;
-    levelLenght = 32;
+    levelLenght = 86; //96 -16?
     levelHeight = 18;
     platformList = [];
 
@@ -27,13 +27,13 @@ export default class ProceduralLevelGenerator
         let lastHeight = this.platformList[index].platformHeight;
 
         let leftEdge = lastRightEdge + this.getRandomInRange(2, 3);
-        let platformHeight = lastHeight + this.getRandomInRange(-3, 3);
+        let platformHeight =  Math.abs(lastHeight + this.getRandomInRange(-3, 3));
 
         if (platformHeight >= this.levelHeight){
             platformHeight = 14;
         }
-        else if (platformHeight < 0){
-            platformHeight = -platformHeight;
+        else if (platformHeight <= 2) {
+            platformHeight = 3;
         }
 
         let rightEdge = leftEdge + this.getRandomInRange(this.minLenght, this.maxLenght);
@@ -54,8 +54,8 @@ export default class ProceduralLevelGenerator
             index = this.platformList[this.platformList.length - 1].rightEdge;
         }
         //let platform = new Platform(final, this.levelLenght - 1, this.levelHeight - 1);
-        let platform = new Platform(0, this.levelLenght - 1, this.levelHeight - 1);
-        this.platformList.push(platform);
+        //let platform = new Platform(0, this.levelLenght - 1, this.levelHeight - 1);
+        //this.platformList.push(platform);
 
         return this.platformList;
     }
